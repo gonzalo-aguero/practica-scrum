@@ -102,7 +102,10 @@ Desde el directorio raíz del proyecto:
 ```bash
 cd front/
 npm install      # Instala dependencias
-npm start        # Lanza el frontend en http://localhost:3000
+
+# Dos altenativas:
+npm start        # Para lanzar el frontend en http://localhost:3000
+npm run dev     # Igual que el anterior, pero se reinicia cada vez que haces cambios (mejor para desarrollar)
 ```
 
 > Asegurate de que tu React apunte a la API de Spring Boot en el puerto correcto, por ejemplo `http://localhost:8080`.
