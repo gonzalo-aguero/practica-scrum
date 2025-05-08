@@ -51,12 +51,24 @@ public class UsuarioService {
     private UsuarioDTO mapToDTO(final Usuario usuario, final UsuarioDTO usuarioDTO) {
         usuarioDTO.setId(usuario.getId());
         usuarioDTO.setNombre(usuario.getNombre());
+        usuarioDTO.setDni(usuario.getDni());
+        usuarioDTO.setDomicilio(usuario.getDomicilio());
+        usuarioDTO.setFehcaNacimiento(usuario.getFechaNacimiento());
+        usuarioDTO.setContrasena(usuario.getContrasena());
         return usuarioDTO;
     }
 
     private Usuario mapToEntity(final UsuarioDTO usuarioDTO, final Usuario usuario) {
         usuario.setNombre(usuarioDTO.getNombre());
+        usuario.setDni(usuarioDTO.getDni());
+        usuario.setDomicilio(usuarioDTO.getDomicilio());
+        usuario.setFechaNacimiento(usuarioDTO.getFehcaNacimiento());
+        usuario.setContrasena(usuarioDTO.getContrasena());
         return usuario;
+    }
+
+    public boolean dniExists(final String dni) {
+        return usuarioRepository.existsByDniIgnoreCase(dni);
     }
 
 }

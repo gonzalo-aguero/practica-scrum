@@ -49,7 +49,7 @@ public class AdministradorResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<Long> updateAdministrador(@PathVariable(name = "id") final Long id,
-            @RequestBody @Valid final AdministradorDTO administradorDTO) {
+                                                    @RequestBody @Valid final AdministradorDTO administradorDTO) {
         administradorService.update(id, administradorDTO);
         return ResponseEntity.ok(id);
     }

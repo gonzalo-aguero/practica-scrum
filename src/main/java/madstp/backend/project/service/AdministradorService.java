@@ -49,16 +49,28 @@ public class AdministradorService {
     }
 
     private AdministradorDTO mapToDTO(final Administrador administrador,
-            final AdministradorDTO administradorDTO) {
+                                      final AdministradorDTO administradorDTO) {
         administradorDTO.setId(administrador.getId());
         administradorDTO.setNombre(administrador.getNombre());
+        administradorDTO.setDni(administrador.getDni());
+        administradorDTO.setDomicilio(administrador.getDomicilio());
+        administradorDTO.setFehcaNacimiento(administrador.getFechaNacimiento());
+        administradorDTO.setContrasena(administrador.getContrasena());
         return administradorDTO;
     }
 
     private Administrador mapToEntity(final AdministradorDTO administradorDTO,
-            final Administrador administrador) {
+                                      final Administrador administrador) {
         administrador.setNombre(administradorDTO.getNombre());
+        administrador.setDni(administradorDTO.getDni());
+        administrador.setDomicilio(administradorDTO.getDomicilio());
+        administrador.setFechaNacimiento(administradorDTO.getFehcaNacimiento());
+        administrador.setContrasena(administradorDTO.getContrasena());
         return administrador;
+    }
+
+    public boolean dniExists(final String dni) {
+        return administradorRepository.existsByDniIgnoreCase(dni);
     }
 
 }
