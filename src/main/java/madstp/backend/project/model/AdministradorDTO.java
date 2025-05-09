@@ -19,8 +19,11 @@ public class AdministradorDTO {
 
     @NotNull
     @Size(max = 255)
-    @AdministradorDniUnique
-    private String dni;
+    @AdministradorDocumentoUnique
+    private String documento;
+
+    @NotNull
+    private TipoDocumento tipodocumento;
 
     @NotNull
     @Size(max = 255)

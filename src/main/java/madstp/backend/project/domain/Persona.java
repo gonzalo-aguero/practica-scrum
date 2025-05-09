@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import lombok.Getter;
 import lombok.Setter;
+import madstp.backend.project.model.TipoDocumento;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -41,6 +42,9 @@ public abstract class Persona {
 
     @Column(nullable = false, unique = true)
     private String dni;
+
+    @Column(nullable = false)
+    private TipoDocumento tipoDocumento;
 
     @Column(nullable = false)
     private String domicilio;

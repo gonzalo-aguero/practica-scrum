@@ -1,5 +1,6 @@
 package madstp.backend.project.rest;
 
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
@@ -38,6 +39,13 @@ public class AdministradorResource {
             @PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(administradorService.get(id));
     }
+
+    @GetMapping("/{documento}")
+    public ResponseEntity<AdministradorDTO> getByDocumentoAdministrador(
+            @PathVariable(name = "documento") final String documento) {
+        return ResponseEntity.ok(administradorService.getByDocumento(documento));
+    }
+
 
     @PostMapping
     @ApiResponse(responseCode = "201")

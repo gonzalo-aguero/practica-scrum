@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface AdministradorRepository extends JpaRepository<Administrador, Long> {
 
-    boolean existsByDniIgnoreCase(String dni);
+    boolean existsByDocumentoIgnoreCase(String documento);
 
-}
+
+    Optional<Administrador> findByDocumento(String documento);
+
+    }

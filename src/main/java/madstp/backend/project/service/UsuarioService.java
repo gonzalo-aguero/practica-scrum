@@ -2,6 +2,7 @@ package madstp.backend.project.service;
 
 import java.util.List;
 import madstp.backend.project.domain.Usuario;
+import madstp.backend.project.model.TipoDocumento;
 import madstp.backend.project.model.UsuarioDTO;
 import madstp.backend.project.repos.UsuarioRepository;
 import madstp.backend.project.util.NotFoundException;
@@ -31,6 +32,12 @@ public class UsuarioService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public UsuarioDTO getByDocumento(final String documento){
+        return usuarioRepository.findByDocumento(documento)
+                .map(usuario -> mapToDTO(usuario, new UsuarioDTO()))
+                .orElseThrow(NotFoundException::new);
+    }
+
     public Long create(final UsuarioDTO usuarioDTO) {
         final Usuario usuario = new Usuario();
         mapToEntity(usuarioDTO, usuario);
@@ -51,7 +58,7 @@ public class UsuarioService {
     private UsuarioDTO mapToDTO(final Usuario usuario, final UsuarioDTO usuarioDTO) {
         usuarioDTO.setId(usuario.getId());
         usuarioDTO.setNombre(usuario.getNombre());
-        usuarioDTO.setDni(usuario.getDni());
+        usuarioDTO.setDocumento(usuario.getDocumento());
         usuarioDTO.setDomicilio(usuario.getDomicilio());
         usuarioDTO.setFehcaNacimiento(usuario.getFechaNacimiento());
         usuarioDTO.setContrasena(usuario.getContrasena());
@@ -59,16 +66,17 @@ public class UsuarioService {
     }
 
     private Usuario mapToEntity(final UsuarioDTO usuarioDTO, final Usuario usuario) {
+        usuario.setId(usuarioDTO.getId());
         usuario.setNombre(usuarioDTO.getNombre());
-        usuario.setDni(usuarioDTO.getDni());
+        usuario.setDocumento(usuarioDTO.getDocumento());
+        usuario.setTipoDocumento(usuarioDTO.getTipodocumento());
         usuario.setDomicilio(usuarioDTO.getDomicilio());
-        usuario.setFechaNacimiento(usuarioDTO.getFehcaNacimiento());
+        usuario.setFechaNacimiento(usuarioDTO.getFechaNacimiento());
         usuario.setContrasena(usuarioDTO.getContrasena());
         return usuario;
     }
 
-    public boolean dniExists(final String dni) {
-        return usuarioRepository.existsByDniIgnoreCase(dni);
+    public boolean documentoExists(final String documento) {
+        return usuarioRepository.existsByDocumentoIgnoreCase(documento);
     }
-
 }

@@ -19,15 +19,18 @@ public class UsuarioDTO {
 
     @NotNull
     @Size(max = 255)
-    @UsuarioDniUnique
-    private String dni;
+    @UsuarioDocumentoUnique
+    private String documento;
+
+    @NotNull
+    private TipoDocumento tipodocumento;
 
     @NotNull
     @Size(max = 255)
     private String domicilio;
 
     @NotNull
-    private LocalDate fehcaNacimiento;
+    private LocalDate fechaNacimiento;
 
     @NotNull
     private String contrasena;

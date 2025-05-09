@@ -14,35 +14,35 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Map;
-import madstp.backend.project.service.UsuarioService;
+import madstp.backend.project.service.AdministradorService;
 import org.springframework.web.servlet.HandlerMapping;
 
 
 /**
- * Validate that the dni value isn't taken yet.
+ * Validate that the documento value isn't taken yet.
  */
 @Target({ FIELD, METHOD, ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(
-        validatedBy = UsuarioDniUnique.UsuarioDniUniqueValidator.class
+        validatedBy = AdministradorDocumentoUnique.AdministradorDocumentoUniqueValidator.class
 )
-public @interface UsuarioDniUnique {
+public @interface AdministradorDocumentoUnique {
 
-    String message() default "{Exists.usuario.dni}";
+    String message() default "{Exists.administrador.documento}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    class UsuarioDniUniqueValidator implements ConstraintValidator<UsuarioDniUnique, String> {
+    class AdministradorDocumentoUniqueValidator implements ConstraintValidator<AdministradorDocumentoUnique, String> {
 
-        private final UsuarioService usuarioService;
+        private final AdministradorService administradorService;
         private final HttpServletRequest request;
 
-        public UsuarioDniUniqueValidator(final UsuarioService usuarioService,
+        public AdministradorDocumentoUniqueValidator(final AdministradorService administradorService,
                 final HttpServletRequest request) {
-            this.usuarioService = usuarioService;
+            this.administradorService = administradorService;
             this.request = request;
         }
 
@@ -55,11 +55,11 @@ public @interface UsuarioDniUnique {
             @SuppressWarnings("unchecked") final Map<String, String> pathVariables =
                     ((Map<String, String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
             final String currentId = pathVariables.get("id");
-            if (currentId != null && value.equalsIgnoreCase(usuarioService.get(Long.parseLong(currentId)).getDni())) {
+            if (currentId != null && value.equalsIgnoreCase(administradorService.get(Long.parseLong(currentId)).getDocumento())) {
                 // value hasn't changed
                 return true;
             }
-            return !usuarioService.dniExists(value);
+            return !administradorService.documentoExists(value);
         }
 
     }

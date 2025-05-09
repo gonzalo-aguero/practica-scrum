@@ -14,35 +14,35 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Map;
-import madstp.backend.project.service.AdministradorService;
+import madstp.backend.project.service.UsuarioService;
 import org.springframework.web.servlet.HandlerMapping;
 
 
 /**
- * Validate that the dni value isn't taken yet.
+ * Validate that the documento value isn't taken yet.
  */
 @Target({ FIELD, METHOD, ANNOTATION_TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(
-        validatedBy = AdministradorDniUnique.AdministradorDniUniqueValidator.class
+        validatedBy = UsuarioDocumentoUnique.UsuarioDocumentoUniqueValidator.class
 )
-public @interface AdministradorDniUnique {
+public @interface UsuarioDocumentoUnique {
 
-    String message() default "{Exists.administrador.dni}";
+    String message() default "{Exists.usuario.Documento}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    class AdministradorDniUniqueValidator implements ConstraintValidator<AdministradorDniUnique, String> {
+    class UsuarioDocumentoUniqueValidator implements ConstraintValidator<UsuarioDocumentoUnique, String> {
 
-        private final AdministradorService administradorService;
+        private final UsuarioService usuarioService;
         private final HttpServletRequest request;
 
-        public AdministradorDniUniqueValidator(final AdministradorService administradorService,
+        public UsuarioDocumentoUniqueValidator(final UsuarioService usuarioService,
                 final HttpServletRequest request) {
-            this.administradorService = administradorService;
+            this.usuarioService = usuarioService;
             this.request = request;
         }
 
@@ -55,11 +55,11 @@ public @interface AdministradorDniUnique {
             @SuppressWarnings("unchecked") final Map<String, String> pathVariables =
                     ((Map<String, String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
             final String currentId = pathVariables.get("id");
-            if (currentId != null && value.equalsIgnoreCase(administradorService.get(Long.parseLong(currentId)).getDni())) {
+            if (currentId != null && value.equalsIgnoreCase(usuarioService.get(Long.parseLong(currentId)).getDocumento())) {
                 // value hasn't changed
                 return true;
             }
-            return !administradorService.dniExists(value);
+            return !usuarioService.documentoExists(value);
         }
 
     }
