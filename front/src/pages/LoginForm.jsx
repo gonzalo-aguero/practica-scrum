@@ -26,7 +26,7 @@ const LoginForm = () => {
             navigate('/homeUsuario');
             alert('Login exitoso');
         }else{
-            alert('Para navegar para el homeAdministrador por favor ingrese admin y para el homeUsuario por favor ingrese user');
+            alert('Para navegar para el homeAdministrador por favor ingrese admin contra: admin12345_ y para el homeUsuario por favor ingrese user contra: user12345_');
         }
 
     };
