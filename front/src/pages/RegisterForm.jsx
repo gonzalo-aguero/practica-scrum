@@ -16,9 +16,12 @@ const validationSchema = Yup.object({
   nombre: Yup.string()
     .max(255, 'El nombre no puede tener más de 255 caracteres')
     .required('El nombre es requerido'),
+  tipoDocumento: Yup.string()
+    .oneOf(['DNI', 'CEDULA_IDENTIDAD', 'PASAPORTE', 'LIBRETA_CIVICA', 'LIBRETA_ENROLAMIENTO'], 'Tipo de documento inválido')
+    .required('El tipo de documento es requerido'),
   dni: Yup.string()
     .matches(/^\d{7,8}$/, 'El DNI debe tener 7 u 8 dígitos')
-    .required('El DNI es requerido'),
+    .required('El número de documento es requerido'),
   domicilio: Yup.string()
     .max(255, 'El domicilio no puede tener más de 255 caracteres')
     .required('El domicilio es requerido'),
@@ -74,6 +77,7 @@ const RegisterForm = () => {
             password: '',
             confirmPassword: '',
             nombre: '',
+            tipoDocumento: 'DNI',
             dni: '',
             domicilio: '',
             fechaNacimiento: '',
@@ -142,8 +146,27 @@ const RegisterForm = () => {
                 </div>
 
                 <div>
+                  <label htmlFor="tipoDocumento" className="block text-sm font-medium text-gray-700 mb-1">
+                    Tipo de Documento
+                  </label>
+                  <Field
+                    as="select"
+                    id="tipoDocumento"
+                    name="tipoDocumento"
+                    className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition duration-150 ease-in-out"
+                  >
+                    <option value="DNI">DNI</option>
+                    <option value="CEDULA_IDENTIDAD">Cédula de Identidad</option>
+                    <option value="PASAPORTE">Pasaporte</option>
+                    <option value="LIBRETA_CIVICA">Libreta Cívica</option>
+                    <option value="LIBRETA_ENROLAMIENTO">Libreta de Enrolamiento</option>
+                  </Field>
+                  <ErrorMessage name="tipoDocumento" component="div" className="text-red-500 text-sm mt-1" />
+                </div>
+
+                <div>
                   <label htmlFor="dni" className="block text-sm font-medium text-gray-700 mb-1">
-                    DNI
+                    Número de Documento
                   </label>
                   <Field
                     id="dni"
