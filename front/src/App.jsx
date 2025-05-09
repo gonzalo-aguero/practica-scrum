@@ -15,7 +15,9 @@ function App() {
               <p className="mt-4 text-gray-600">Sistema de gestión de licencias de conducir de la Municipalidad de Santa Fe</p>
             </div>} />
             <Route path="/alta-usuario" element={<RegisterForm />} />
-            {/* Agregar más rutas según sea necesario */}
+            <Route path="/alta-titular" element={<RegisterTitularForm />} />
+            <Route path="/login" element={<LoginForm />} />
+                {/* Agregar más rutas según sea necesario */}
           </Routes>
         </main>
       </div>
