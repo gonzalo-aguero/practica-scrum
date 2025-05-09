@@ -16,6 +16,9 @@ application-local.properties
 ## VS Code
 .vscode/
 
+## Cursor
+.cursor/
+
 ## STS
 .apt_generated
 .classpath
