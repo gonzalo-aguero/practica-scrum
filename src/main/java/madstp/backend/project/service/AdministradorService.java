@@ -19,14 +19,20 @@ public class AdministradorService {
     }
 
     public List<AdministradorDTO> findAll() {
-        final List<Administrador> administradors = administradorRepository.findAll(Sort.by("id"));
-        return administradors.stream()
+        final List<Administrador> administradores = administradorRepository.findAll(Sort.by("id"));
+        return administradores.stream()
                 .map(administrador -> mapToDTO(administrador, new AdministradorDTO()))
                 .toList();
     }
 
     public AdministradorDTO get(final Long id) {
         return administradorRepository.findById(id)
+                .map(administrador -> mapToDTO(administrador, new AdministradorDTO()))
+                .orElseThrow(NotFoundException::new);
+    }
+
+    public AdministradorDTO getByDocumento(final String documento) {
+        return administradorRepository.findByDocumento(documento)
                 .map(administrador -> mapToDTO(administrador, new AdministradorDTO()))
                 .orElseThrow(NotFoundException::new);
     }
@@ -55,7 +61,7 @@ public class AdministradorService {
         administradorDTO.setDocumento(administrador.getDocumento());
         administradorDTO.setTipodocumento(administrador.getTipoDocumento());
         administradorDTO.setDomicilio(administrador.getDomicilio());
-        administradorDTO.setFehcaNacimiento(administrador.getFechaNacimiento());
+        administradorDTO.setFechaNacimiento(administrador.getFechaNacimiento());
         administradorDTO.setContrasena(administrador.getContrasena());
         return administradorDTO;
     }
@@ -66,7 +72,7 @@ public class AdministradorService {
         administrador.setDocumento(administradorDTO.getDocumento());
         administrador.setTipoDocumento(administradorDTO.getTipodocumento());
         administrador.setDomicilio(administradorDTO.getDomicilio());
-        administrador.setFechaNacimiento(administradorDTO.getFehcaNacimiento());
+        administrador.setFechaNacimiento(administradorDTO.getFechaNacimiento());
         administrador.setContrasena(administradorDTO.getContrasena());
         return administrador;
     }

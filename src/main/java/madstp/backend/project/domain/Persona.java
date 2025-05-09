@@ -41,7 +41,7 @@ public abstract class Persona {
     private String nombre;
 
     @Column(nullable = false, unique = true)
-    private String dni;
+    private String documento;
 
     @Column(nullable = false)
     private TipoDocumento tipoDocumento;

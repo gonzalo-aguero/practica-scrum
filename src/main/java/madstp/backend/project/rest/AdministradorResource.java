@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping(value = "/api/administradors", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/administradores", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AdministradorResource {
 
     private final AdministradorService administradorService;

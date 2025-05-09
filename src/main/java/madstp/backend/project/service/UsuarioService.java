@@ -60,7 +60,7 @@ public class UsuarioService {
         usuarioDTO.setNombre(usuario.getNombre());
         usuarioDTO.setDocumento(usuario.getDocumento());
         usuarioDTO.setDomicilio(usuario.getDomicilio());
-        usuarioDTO.setFehcaNacimiento(usuario.getFechaNacimiento());
+        usuarioDTO.setFechaNacimiento(usuario.getFechaNacimiento());
         usuarioDTO.setContrasena(usuario.getContrasena());
         return usuarioDTO;
     }

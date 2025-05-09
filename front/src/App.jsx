@@ -1,6 +1,8 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import RegisterForm from './pages/RegisterForm';
+import RegisterTitularForm from './pages/RegisterTitularForm';
+import LoginForm from './pages/LoginForm';
 import './App.css';
 
 function App() {

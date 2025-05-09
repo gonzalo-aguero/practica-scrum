@@ -38,6 +38,12 @@ public class UsuarioResource {
         return ResponseEntity.ok(usuarioService.get(id));
     }
 
+    @GetMapping("/{documento}")
+    public ResponseEntity<UsuarioDTO> getByDocumentoUsuario(@PathVariable(name = "documento") final String documento) {
+        return ResponseEntity.ok(usuarioService.getByDocumento(documento));
+    }
+
+
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createUsuario(@RequestBody @Valid final UsuarioDTO usuarioDTO) {

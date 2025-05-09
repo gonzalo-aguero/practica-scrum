@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AdministradorDTO {
+public class TitularDTO {
 
     private Long id;
 
@@ -19,11 +19,8 @@ public class AdministradorDTO {
 
     @NotNull
     @Size(max = 255)
-    @AdministradorDocumentoUnique
+    @TitularDocumentoUnique
     private String documento;
-
-    @NotNull
-    private TipoDocumento tipodocumento;
 
     @NotNull
     @Size(max = 255)
@@ -32,7 +29,6 @@ public class AdministradorDTO {
     @NotNull
     private LocalDate fechaNacimiento;
 
-    @NotNull
-    private String contrasena;
+    private Boolean esDonanteOrganos;
 
 }
