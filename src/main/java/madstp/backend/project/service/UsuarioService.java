@@ -79,4 +79,10 @@ public class UsuarioService {
     public boolean documentoExists(final String documento) {
         return usuarioRepository.existsByDocumentoIgnoreCase(documento);
     }
+
+    public boolean authenticate(final String documento, final String contrasena){
+        return usuarioRepository.findByDocumento(documento)
+                .map(usuario -> usuario.getContrasena().equals(contrasena))
+                .orElse(false);
+    }
 }

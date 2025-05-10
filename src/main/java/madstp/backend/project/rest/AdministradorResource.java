@@ -9,14 +9,7 @@ import madstp.backend.project.service.AdministradorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -45,6 +38,13 @@ public class AdministradorResource {
             @PathVariable(name = "documento") final String documento) {
         return ResponseEntity.ok(administradorService.getByDocumento(documento));
     }
+
+    @PostMapping("/authenticate")
+    public ResponseEntity<Boolean> authenticate(
+            @RequestBody @Valid final AdministradorDTO administradorDTO){
+        return ResponseEntity.ok(administradorService.authenticate(administradorDTO.getDocumento(), administradorDTO.getContrasena()));
+    }
+
 
 
     @PostMapping

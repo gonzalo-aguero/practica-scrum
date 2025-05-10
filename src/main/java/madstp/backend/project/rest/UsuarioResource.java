@@ -43,6 +43,11 @@ public class UsuarioResource {
         return ResponseEntity.ok(usuarioService.getByDocumento(documento));
     }
 
+    @PostMapping("/authenticate")
+    public ResponseEntity<Boolean> authenticate(
+            @RequestBody @Valid final UsuarioDTO usuarioDTO){
+        return ResponseEntity.ok(usuarioService.authenticate(usuarioDTO.getDocumento(), usuarioDTO.getContrasena()));
+    }
 
     @PostMapping
     @ApiResponse(responseCode = "201")

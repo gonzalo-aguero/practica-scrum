@@ -16,11 +16,8 @@ import lombok.Setter;
 import org.springframework.stereotype.Component;
 
 
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "Administrador", schema = "public")
-@Getter
-@Setter
 public class Administrador extends Persona {
 }

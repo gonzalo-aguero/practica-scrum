@@ -81,4 +81,9 @@ public class AdministradorService {
         return administradorRepository.existsByDocumentoIgnoreCase(documento);
     }
 
+    public boolean authenticate(final String documento, final String contrasena){
+        return administradorRepository.findByDocumento(documento)
+                .map(administrador -> administrador.getContrasena().equals(contrasena))
+                .orElse(false);
+    }
 }

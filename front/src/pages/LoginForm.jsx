@@ -4,34 +4,86 @@ import { useNavigate } from 'react-router-dom';
 const LoginForm = () => {
     const [documento, setDocumento] = useState('');
     const [contrasena, setContrasena] = useState('');
-    const [error, setError] = useState('')
+    const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleSubmit = (e) => {
+    const validarFormulario = () => {
+        if (!documento || !contrasena) {
+            setError('Todos los campos son obligatorios');
+            return false;
+        }
+        setError('');
+        return true;
+    };
+
+    const authenticate = async (url, datos) => {
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(datos),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error en la solicitud: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data; // Retorna el booleano del backend
+        } catch (error) {
+            console.error('Error en la autenticación:', error);
+            setError('Error al comunicarse con el servidor. Inténtalo más tarde.');
+            return false;
+        }
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (documento.length === 0 || contrasena.length === 0) {
-            setError('Todos los campos son obligatorios');
+        if (!validarFormulario()) {
             return;
         }
 
-        console.log('Documento: ', documento);
-        console.log('Contrasena: ', contrasena);
-        setError('');
+        const datos = { documento, contrasena };
 
-        if(documento === 'admin' && contrasena === 'admin12345_'){
-            navigate('/homeAdministrador');
-            alert('Login exitoso');
-        }else if(documento === 'user' && contrasena === 'user12345_'){
-            navigate('/homeUsuario');
-            alert('Login exitoso');
-        }else{
-            alert('Para navegar para el homeAdministrador por favor ingrese admin contra: admin12345_ y para el homeUsuario por favor ingrese user contra: user12345_');
+        try {
+            if (documento === 'admin' && contrasena === 'admin12345_') {
+                navigate('/homeAdministrador');
+                alert('Login exitoso');
+                return;
+            }
+
+            if (documento === 'user' && contrasena === 'user12345_') {
+                navigate('/homeUsuario');
+                alert('Login exitoso');
+                return;
+            }
+
+            const esAdministrador = await authenticate('http://localhost:8080/api/administradores/authenticate', datos);
+            if (esAdministrador) {
+                navigate('/homeAdministrador');
+                alert('Login exitoso');
+                return;
+            }
+
+            const esUsuario = await authenticate('http://localhost:8080/api/usuarios/authenticate', datos);
+            if (esUsuario) {
+                navigate('/homeUsuario');
+                alert('Login exitoso');
+                return;
+            }
+
+            alert('Credenciales incorrectas. Intente nuevamente.');
+        } catch (error) {
+            console.error('Error durante el inicio de sesión:', error);
+            setError('Ocurrió un error al intentar iniciar sesión.');
         }
-
     };
+
     return (
-        <form onSubmit={handleSubmit} className="p-4 max-w-md mx-auto">
+        <form onSubmit={handleSubmit} className="p-4 max-w-md mx-auto" name="formularioLogin">
             <h2 className="text-xl font-bold mb-4">Iniciar sesión</h2>
             {error && <p className="text-red-500">{error}</p>}
             <div className="mb-2">
@@ -58,7 +110,7 @@ const LoginForm = () => {
                 Iniciar sesión
             </button>
         </form>
-    )
+    );
 };
 
 export default LoginForm;
