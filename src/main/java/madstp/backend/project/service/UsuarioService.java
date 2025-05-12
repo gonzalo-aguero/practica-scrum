@@ -39,8 +39,13 @@ public class UsuarioService {
     }
 
     public Long create(final UsuarioDTO usuarioDTO) {
-        final Usuario usuario = new Usuario();
-        mapToEntity(usuarioDTO, usuario);
+        // Validación de que las contraseñas coincidan
+        if (!verificarContrasenaRepetida(usuarioDTO.getContrasena(), usuarioDTO.getConfirmarContrasena())) {
+            throw new IllegalArgumentException("Las contraseñas no coinciden");
+        }
+
+        Usuario usuario = new Usuario();
+        usuario = mapToEntity(usuarioDTO, usuario);
         return usuarioRepository.save(usuario).getId();
     }
 
@@ -85,4 +90,10 @@ public class UsuarioService {
                 .map(usuario -> usuario.getContrasena().equals(contrasena))
                 .orElse(false);
     }
+
+    public boolean verificarContrasenaRepetida(final String contrasena, final String confirmarContrasena) {
+        return contrasena != null && contrasena.equals(confirmarContrasena);
+    }
+
+
 }

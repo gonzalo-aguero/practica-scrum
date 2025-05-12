@@ -34,4 +34,7 @@ public class UsuarioDTO {
 
     @NotNull
     private String contrasena;
+
+    @NotNull
+    private String confirmarContrasena;
 }
