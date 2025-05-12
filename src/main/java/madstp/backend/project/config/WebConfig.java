@@ -1,4 +1,4 @@
-package com.tpscrum.demo.config;
+package madstp.backend.project.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

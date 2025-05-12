@@ -77,7 +77,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>com.tpscrum.demo.DemoApplication</mainClass>
+                    <mainClass>madstp.backend.project.ProjectApplication</mainClass>
                     <profiles>
                         <profile>local</profile>
                     </profiles>
