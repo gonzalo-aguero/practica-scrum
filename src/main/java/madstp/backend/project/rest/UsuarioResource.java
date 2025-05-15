@@ -45,7 +45,7 @@ public class UsuarioResource {
 
     @PostMapping("/authenticate")
     public ResponseEntity<Boolean> authenticate(
-            @RequestBody @Valid final UsuarioDTO usuarioDTO){
+            @RequestBody final UsuarioDTO usuarioDTO){
         return ResponseEntity.ok(usuarioService.authenticate(usuarioDTO.getDocumento(), usuarioDTO.getContrasena()));
     }
 

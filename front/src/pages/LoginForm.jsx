@@ -47,6 +47,7 @@ const LoginForm = () => {
         }
 
         const datos = { documento, contrasena };
+        console.log(datos);
 
         try {
             if (documento === 'admin' && contrasena === 'admin12345_') {
@@ -62,6 +63,7 @@ const LoginForm = () => {
             }
 
             const esAdministrador = await authenticate('http://localhost:8080/api/administradores/authenticate', datos);
+            console.log(esAdministrador);
             if (esAdministrador) {
                 navigate('/homeAdministrador');
                 alert('Login exitoso');
@@ -69,6 +71,7 @@ const LoginForm = () => {
             }
 
             const esUsuario = await authenticate('http://localhost:8080/api/usuarios/authenticate', datos);
+            console.log(esUsuario);
             if (esUsuario) {
                 navigate('/homeUsuario');
                 alert('Login exitoso');

@@ -41,7 +41,7 @@ public class AdministradorResource {
 
     @PostMapping("/authenticate")
     public ResponseEntity<Boolean> authenticate(
-            @RequestBody @Valid final AdministradorDTO administradorDTO){
+            @RequestBody final AdministradorDTO administradorDTO){
         return ResponseEntity.ok(administradorService.authenticate(administradorDTO.getDocumento(), administradorDTO.getContrasena()));
     }
 
