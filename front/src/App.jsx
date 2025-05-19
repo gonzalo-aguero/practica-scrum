@@ -6,9 +6,9 @@ import RegisterTitularForm from './pages/TitularRegisterForm.jsx';
 import LoginForm from './pages/LoginForm';
 import homeUsuario from "./pages/HomeUsuario.jsx";
 import homeAdministrador from "./pages/HomeAdministrador.jsx";
-
-import './App.css';
 import LicenseRegisterForm from './pages/LicenseRegisterForm.jsx';
+import './App.css';
+
 
 
 function HomePage() {
