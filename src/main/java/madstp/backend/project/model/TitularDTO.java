@@ -1,5 +1,6 @@
 package madstp.backend.project.model;
 
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
@@ -23,11 +24,17 @@ public class TitularDTO {
     private String documento;
 
     @NotNull
+    private TipoDocumento tipoDocumento;
+
+    @NotNull
     @Size(max = 255)
     private String domicilio;
 
     @NotNull
     private LocalDate fechaNacimiento;
+
+    @NotNull
+    private String contrasena;
 
     private Boolean esDonanteOrganos;
 

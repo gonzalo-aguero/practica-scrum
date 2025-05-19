@@ -2,13 +2,17 @@ package madstp.backend.project.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.Table;
+import lombok.*;
 
 
-@Entity
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
+@Builder
+@Entity
+@Table(name = "Titular", schema = "public")
 public class Titular extends Persona {
 
     @Column
