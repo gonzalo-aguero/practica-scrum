@@ -7,4 +7,3 @@ const HomeAdministrador = () => {
 };
 
 export default HomeAdministrador;
-

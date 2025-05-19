@@ -33,7 +33,7 @@ const validationSchema = Yup.object({
         .required('El tipo de usuario es requerido'),
 });
 
-const RegisterForm = () => {
+const RegisterUsuarioForm = () => {
     const [message, setMessage] = useState({ type: '', text: '' });
 
     const handleSubmit = async (values, { setSubmitting, resetForm }) => {
@@ -250,4 +250,4 @@ const RegisterForm = () => {
     );
 };
 
-export default RegisterForm;
+export default RegisterUsuarioForm;

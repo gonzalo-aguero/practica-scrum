@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import {useHeader} from "../components/HeaderContext.jsx";
 import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
+    const {setHeaderState} = useHeader();
     const [documento, setDocumento] = useState('');
     const [contrasena, setContrasena] = useState('');
     const [error, setError] = useState('');
@@ -51,12 +53,14 @@ const LoginForm = () => {
 
         try {
             if (documento === 'admin' && contrasena === 'admin12345_') {
+                setHeaderState({ tipo: 'admin'});
                 navigate('/homeAdministrador');
                 alert('Login exitoso');
                 return;
             }
 
             if (documento === 'user' && contrasena === 'user12345_') {
+                setHeaderState({ tipo: 'user'});
                 navigate('/homeUsuario');
                 alert('Login exitoso');
                 return;
@@ -112,6 +116,14 @@ const LoginForm = () => {
             <button type="submit" className="bg-blue-500 text-white p-2 w-full">
                 Iniciar sesión
             </button>
+            <div className="Administrador-default-login">
+                <h1>Administrador predeterminado</h1>
+                <h2>Documento: admin ; Contraseña: admin12345_</h2>
+            </div>
+            <div className="Usuario-default-login">
+                <h1>Usuario predeterminado</h1>
+                <h2>Documento: user ; Contraseña: user12345_</h2>
+            </div>
         </form>
     );
 };
