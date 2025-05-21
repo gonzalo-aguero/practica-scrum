@@ -1,7 +1,7 @@
 package madstp.backend.project.model;
 
 
-public enum ClaseLicencia {
+public enum ClaseLicenciaEnum {
 
     A,
     B,

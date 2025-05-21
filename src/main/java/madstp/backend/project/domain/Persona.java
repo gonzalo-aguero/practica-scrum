@@ -21,9 +21,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
+
 public abstract class Persona {
 
     @Id
@@ -48,6 +46,9 @@ public abstract class Persona {
 
     @Column(nullable = false)
     private TipoDocumento tipoDocumento;
+
+    @Column(nullable=false)
+    private String cuil;
 
     @Column(nullable = false)
     private String domicilio;

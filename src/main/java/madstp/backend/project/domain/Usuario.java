@@ -17,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "Usuario", schema = "public")
