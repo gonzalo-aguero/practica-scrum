@@ -25,7 +25,7 @@ public class TitularResource {
         this.titularService = titularService;
     }
 
-    @GetMapping
+    @GetMapping("/all-titulares")
     @ApiResponse(responseCode = "200")
     public ResponseEntity<List<TitularDTO>> getAllTitulares() {
         return ResponseEntity.ok(titularService.findAll());

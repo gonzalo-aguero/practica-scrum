@@ -6,11 +6,8 @@ import jakarta.persistence.Table;
 import lombok.*;
 
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@Builder
 @Entity
 @Table(name = "Titular", schema = "public")
 public class Titular extends Persona {
