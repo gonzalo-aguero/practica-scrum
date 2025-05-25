@@ -2,12 +2,12 @@ package madstp.backend.project.repos;
 
 import madstp.backend.project.domain.Titular;
 import madstp.backend.project.model.TipoDocumento;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import java.time.LocalDate;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -40,5 +40,35 @@ class TitularRepositoryTest {
         assertNotNull(savedTitular);
         assertEquals(titular.getId(), savedTitular.getId());
 
+    }
+
+    @Test
+    public void testFindByTipoDocumentoAndDocumento_ReturnsTitularWhenExists() {
+        // Arrange
+        Titular titular = new Titular();
+        titular.setNombre("Jane");
+        titular.setDocumento("654321");
+        titular.setTipoDocumento(TipoDocumento.PASAPORTE);
+        titular.setDomicilio("456 Another Street");
+        titular.setFechaNacimiento(LocalDate.of(2002, 1, 8));
+        titular.setContrasena("jane2023");
+        titular.setEsDonanteOrganos(false);
+        titularRepository.save(titular);
+
+        // Act
+        Optional<Titular> foundTitular = titularRepository.findByTipoDocumentoAndDocumento(TipoDocumento.PASAPORTE, "654321");
+
+        // Assert
+        assertTrue(foundTitular.isPresent());
+        assertEquals(titular.getId(), foundTitular.get().getId());
+    }
+
+    @Test
+    public void testFindByTipoDocumentoAndDocumento_ReturnsEmptyWhenNotExists() {
+        // Act
+        Optional<Titular> foundTitular = titularRepository.findByTipoDocumentoAndDocumento(TipoDocumento.DNI, "000000");
+
+        // Assert
+        assertFalse(foundTitular.isPresent());
     }
 }

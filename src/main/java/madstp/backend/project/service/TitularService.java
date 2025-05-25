@@ -2,6 +2,7 @@ package madstp.backend.project.service;
 
 import java.util.List;
 import madstp.backend.project.domain.Titular;
+import madstp.backend.project.model.TipoDocumento;
 import madstp.backend.project.model.TitularDTO;
 import madstp.backend.project.repos.TitularRepository;
 import madstp.backend.project.util.NotFoundException;
@@ -31,6 +32,12 @@ public class TitularService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public TitularDTO getByTipoDocumentoAndDocumento(final TipoDocumento tipoDocumento, final String documento) {
+        return titularRepository.findByTipoDocumentoAndDocumento(tipoDocumento, documento)
+                .map(titular -> mapToDTO(titular, new TitularDTO()))
+                .orElseThrow(NotFoundException::new);
+    }
+
     public Long create(final TitularDTO titularDTO) {
         final Titular titular = new Titular();
         mapToEntity(titularDTO, titular);
@@ -51,6 +58,7 @@ public class TitularService {
     private TitularDTO mapToDTO(final Titular titular, final TitularDTO titularDTO) {
         titularDTO.setId(titular.getId());
         titularDTO.setNombre(titular.getNombre());
+        titularDTO.setTipoDocumento(titular.getTipoDocumento());
         titularDTO.setDocumento(titular.getDocumento());
         titularDTO.setDomicilio(titular.getDomicilio());
         titularDTO.setFechaNacimiento(titular.getFechaNacimiento());
@@ -60,6 +68,7 @@ public class TitularService {
 
     private Titular mapToEntity(final TitularDTO titularDTO, final Titular titular) {
         titular.setNombre(titularDTO.getNombre());
+        titular.setTipoDocumento(titularDTO.getTipoDocumento());
         titular.setDocumento(titularDTO.getDocumento());
         titular.setDomicilio(titularDTO.getDomicilio());
         titular.setFechaNacimiento(titularDTO.getFechaNacimiento());

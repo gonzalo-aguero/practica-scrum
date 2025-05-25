@@ -3,19 +3,16 @@ package madstp.backend.project.rest;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
+import java.util.Map;
+
+import jakarta.validation.constraints.NotBlank;
+import madstp.backend.project.model.TipoDocumento;
 import madstp.backend.project.model.TitularDTO;
 import madstp.backend.project.service.TitularService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -28,14 +25,27 @@ public class TitularResource {
         this.titularService = titularService;
     }
 
-    @GetMapping
+    @GetMapping("/all-titulares")
+    @ApiResponse(responseCode = "200")
     public ResponseEntity<List<TitularDTO>> getAllTitulares() {
         return ResponseEntity.ok(titularService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TitularDTO> getTitular(@PathVariable(name = "id") final Long id) {
+    @ApiResponse(responseCode = "200")
+    public ResponseEntity<TitularDTO> getTitular(@PathVariable(name = "id") @NotBlank(message = "El id es obligatorio") final Long id) {
         return ResponseEntity.ok(titularService.get(id));
+    }
+
+    @GetMapping
+    @ApiResponse(responseCode = "200")
+    public ResponseEntity<?> getTitularByTipoDocumentoAndDocumento(@RequestParam(required = false) @NotBlank(message = "El tipo de documento es obligatorio") final TipoDocumento tipoDocumento, @RequestParam(required = false) @NotBlank(message = "El documento es obligatorio") final String documento) {
+        TitularDTO titularDTO = titularService.getByTipoDocumentoAndDocumento(tipoDocumento, documento);
+        if (titularDTO == null) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                    .body(Map.of("message", "No se encontró ningún titular"));
+        }
+        return ResponseEntity.ok(titularDTO);
     }
 
     @PostMapping

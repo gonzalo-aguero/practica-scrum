@@ -4,15 +4,13 @@ import madstp.backend.project.domain.Titular;
 import madstp.backend.project.model.TipoDocumento;
 import madstp.backend.project.model.TitularDTO;
 import madstp.backend.project.repos.TitularRepository;
-import org.junit.jupiter.api.BeforeAll;
+import madstp.backend.project.util.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
@@ -20,6 +18,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -101,6 +100,34 @@ public class TitularServiceTest {
         assertEquals(titularDTO, titularService.get(titularId));
     }
 
+    @Test
+    public void testGetByTipoDocumentoAndDocumento_WithValidData_ReturnTitularDTO() {
+        // Arrange
+        TipoDocumento tipoDocumento = TipoDocumento.DNI;
+        String documento = "123456";
+
+        when(titularRepository.findByTipoDocumentoAndDocumento(tipoDocumento, documento)).thenReturn(Optional.of(titular));
+
+        // Act
+        TitularDTO titularReturn = titularService.getByTipoDocumentoAndDocumento(tipoDocumento, documento);
+
+        // Assert
+        assertThat(titularReturn).isNotNull();
+        assertEquals(tipoDocumento, titularReturn.getTipoDocumento());
+        assertEquals(documento, titularReturn.getDocumento());
+    }
+
+    @Test
+    public void testGetByTipoDocumentoAndDocumento_WithInvalidData_ThrowsNotFoundException() {
+        // Arrange
+        TipoDocumento tipoDocumento = TipoDocumento.DNI;
+        String documento = "999999";
+
+        when(titularRepository.findByTipoDocumentoAndDocumento(tipoDocumento, documento)).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(NotFoundException.class, () -> titularService.getByTipoDocumentoAndDocumento(tipoDocumento, documento));
+    }
 
 
 }
