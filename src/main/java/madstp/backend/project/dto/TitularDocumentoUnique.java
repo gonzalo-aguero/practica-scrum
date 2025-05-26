@@ -1,4 +1,4 @@
-package madstp.backend.project.model;
+package madstp.backend.project.dto;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;

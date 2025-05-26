@@ -1,4 +1,4 @@
-package madstp.backend.project.model;
+package madstp.backend.project.dto;
 
 import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import static java.lang.annotation.ElementType.FIELD;
@@ -14,7 +14,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.Map;
-import madstp.backend.project.service.UsuarioService;
+import madstp.backend.project.service.AdministradorService;
 import org.springframework.web.servlet.HandlerMapping;
 
 
@@ -25,24 +25,24 @@ import org.springframework.web.servlet.HandlerMapping;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(
-        validatedBy = UsuarioDocumentoUnique.UsuarioDocumentoUniqueValidator.class
+        validatedBy = AdministradorDocumentoUnique.AdministradorDocumentoUniqueValidator.class
 )
-public @interface UsuarioDocumentoUnique {
+public @interface AdministradorDocumentoUnique {
 
-    String message() default "{Exists.usuario.Documento}";
+    String message() default "{Exists.administrador.documento}";
 
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
 
-    class UsuarioDocumentoUniqueValidator implements ConstraintValidator<UsuarioDocumentoUnique, String> {
+    class AdministradorDocumentoUniqueValidator implements ConstraintValidator<AdministradorDocumentoUnique, String> {
 
-        private final UsuarioService usuarioService;
+        private final AdministradorService administradorService;
         private final HttpServletRequest request;
 
-        public UsuarioDocumentoUniqueValidator(final UsuarioService usuarioService,
+        public AdministradorDocumentoUniqueValidator(final AdministradorService administradorService,
                 final HttpServletRequest request) {
-            this.usuarioService = usuarioService;
+            this.administradorService = administradorService;
             this.request = request;
         }
 
@@ -55,11 +55,11 @@ public @interface UsuarioDocumentoUnique {
             @SuppressWarnings("unchecked") final Map<String, String> pathVariables =
                     ((Map<String, String>)request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE));
             final String currentId = pathVariables.get("id");
-            if (currentId != null && value.equalsIgnoreCase(usuarioService.get(Long.parseLong(currentId)).getDocumento())) {
+            if (currentId != null && value.equalsIgnoreCase(administradorService.get(Long.parseLong(currentId)).getDocumento())) {
                 // value hasn't changed
                 return true;
             }
-            return !usuarioService.documentoExists(value);
+            return !administradorService.documentoExists(value);
         }
 
     }

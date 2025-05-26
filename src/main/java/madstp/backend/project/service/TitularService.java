@@ -2,8 +2,8 @@ package madstp.backend.project.service;
 
 import java.util.List;
 import madstp.backend.project.domain.Titular;
-import madstp.backend.project.model.TipoDocumento;
-import madstp.backend.project.model.TitularDTO;
+import madstp.backend.project.dto.TitularDTO;
+import madstp.backend.project.enums.TipoDocumentoEnum;
 import madstp.backend.project.repos.TitularRepository;
 import madstp.backend.project.util.NotFoundException;
 import org.springframework.data.domain.Sort;
@@ -32,7 +32,7 @@ public class TitularService {
                 .orElseThrow(NotFoundException::new);
     }
 
-    public TitularDTO getByTipoDocumentoAndDocumento(final TipoDocumento tipoDocumento, final String documento) {
+    public TitularDTO getByTipoDocumentoAndDocumento(final TipoDocumentoEnum tipoDocumento, final String documento) {
         return titularRepository.findByTipoDocumentoAndDocumento(tipoDocumento, documento)
                 .map(titular -> mapToDTO(titular, new TitularDTO()))
                 .orElseThrow(NotFoundException::new);

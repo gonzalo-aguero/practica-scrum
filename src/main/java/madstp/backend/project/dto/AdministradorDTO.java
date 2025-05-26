@@ -1,10 +1,11 @@
-package madstp.backend.project.model;
+package madstp.backend.project.dto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
+import madstp.backend.project.enums.TipoDocumentoEnum;
 
 
 @Getter
@@ -23,7 +24,7 @@ public class AdministradorDTO {
     private String documento;
 
     @NotNull
-    private TipoDocumento tipodocumento;
+    private TipoDocumentoEnum tipodocumento;
 
     @NotNull
     @Size(max = 255)

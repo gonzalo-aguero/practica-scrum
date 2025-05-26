@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
@@ -22,7 +22,7 @@ const TIPO_DOCS = [
 ];
 
 const validationSchema = Yup.object({
-  clase: Yup.string().oneOf(CLASES.map(c => c.value), 'Clase inválida').required('La clase es requerida'),
+  clase: Yup.string().oneOf(CLASES.map(c => c.value), 'Clase inválida'),
   observaciones: Yup.string().max(255, 'Máximo 255 caracteres'),
 });
 
@@ -38,8 +38,7 @@ const calcularEdad = (fechaNacimiento) => {
 };
 
 const LicenseRegisterForm = () => {
-  // Simulación de usuario administrativo logueado
-  const usuarioAdmin = 'admin@municipalidad.com'; // Reemplazar por contexto real si existe
+  const usuarioAdmin = 'admin@municipalidad.com'; // ! Remplazar por contexto real si existe
   const [titular, setTitular] = useState(null);
   const [buscando, setBuscando] = useState(false);
   const [busquedaError, setBusquedaError] = useState('');
@@ -48,27 +47,68 @@ const LicenseRegisterForm = () => {
   const [profesionalOk] = useState(true);
   const [profesionalError] = useState('');
   const [message, setMessage] = useState({ type: '', text: '' });
+  const [clasesSeleccionadas, setClasesSeleccionadas] = useState([]);
+  const [clasesDisponibles, setClasesDisponibles] = useState(CLASES);
 
-  // Buscar titular por tipo y número de documento
+  // Actualizar clases disponibles cuando se carga el titular
+  useEffect(() => {
+    if (titular?.licencias) {
+      const clasesAsignadas = titular.licencias.flatMap(l => l.clases);
+      const nuevasClasesDisponibles = CLASES.filter(c => !clasesAsignadas.includes(c.value));
+      setClasesDisponibles(nuevasClasesDisponibles);
+    } else {
+      setClasesDisponibles(CLASES);
+    }
+  }, [titular]);
+
   const buscarTitular = async (tipo, numero) => {
     setBuscando(true);
     setBusquedaError('');
     setTitular(null);
+    setClasesSeleccionadas([]);
     try {
-      const res = await axios.get(`http://localhost:8080/api/titulares?tipodocumento=${tipo}&documento=${numero}`);
-      if (res.data) {
+      const res = await axios.get(`http://localhost:8080/api/titulares`, {
+        params: {
+          tipoDocumento: tipo,
+          documento: numero
+        }
+      });
+      
+      if (res.status === 204) {
+        setBusquedaError('No se encontró ningún titular');
+      } else if (res.status === 200 && res.data) {
+        console.log(res.data);
         setTitular(res.data);
-      } else {
-        setBusquedaError('No se encontró el titular.');
       }
-    } catch {
-      setBusquedaError('Error al buscar titular.');
+    } catch (error) {
+      console.log(error);
+      if (error.response?.status === 400) {
+        setBusquedaError('El documento es obligatorio');
+      } else if (error.response?.status === 404) {
+        setBusquedaError('No se encontró ningún titular');
+      } else {
+        setBusquedaError('Error al buscar titular');
+      }
     } finally {
       setBuscando(false);
     }
   };
 
-  // Validación de edad mínima
+  const agregarClase = (clase) => {
+    if (!clase) return;
+    if (!clasesSeleccionadas.find(c => c.value === clase)) {
+      const claseInfo = CLASES.find(c => c.value === clase);
+      setClasesSeleccionadas([...clasesSeleccionadas, claseInfo]);
+      setClasesDisponibles(clasesDisponibles.filter(c => c.value !== clase));
+    }
+  };
+
+  const eliminarClase = (claseValue) => {
+    const claseInfo = CLASES.find(c => c.value === claseValue);
+    setClasesSeleccionadas(clasesSeleccionadas.filter(c => c.value !== claseValue));
+    setClasesDisponibles([...clasesDisponibles, claseInfo]);
+  };
+
   const edadMinimaPorClase = (clase) => ['C', 'D', 'E'].includes(clase) ? 21 : 17;
 
   return (
@@ -112,8 +152,26 @@ const LicenseRegisterForm = () => {
             <div><span className="font-medium">Nombre:</span> {titular.nombre}</div>
             <div><span className="font-medium">Fecha Nac.:</span> {titular.fechaNacimiento}</div>
             <div><span className="font-medium">Dirección:</span> {titular.domicilio}</div>
-            <div><span className="font-medium">Grupo Sanguíneo:</span> {titular.grupoSanguineo} {titular.factorRH}</div>
-            <div><span className="font-medium">Donante de órganos:</span> {titular.donanteOrganos ? 'Sí' : 'No'}</div>
+            <div><span className="font-medium">Grupo Sanguíneo:</span> {titular.grupoSanguineo} {titular.factorRH !== undefined ? titular.factorRH : 'undefined'}</div>
+            <div><span className="font-medium">Donante de órganos:</span> {titular.esDonanteOrganos ? 'Sí' : 'No'}</div>
+            {titular.licencias && titular.licencias.length > 0 && (
+              <div className="mt-2">
+                <div className="font-semibold">Licencias actuales:</div>
+                {titular.licencias.map((licencia, index) => (
+                  <div key={index} className="text-sm">
+                    {licencia.clases.map(clase => {
+                      const claseInfo = CLASES.find(c => c.value === clase);
+                      return (
+                        <div key={clase} className="ml-2">
+                          • {clase} - {claseInfo?.label}
+                        </div>
+                      );
+                    })}
+                    <div className="ml-2 text-gray-600">Vence: {licencia.fechaVencimiento}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -132,16 +190,26 @@ const LicenseRegisterForm = () => {
               setSubmitting(false);
               return;
             }
-            // Validación de edad mínima
-            const edad = calcularEdad(titular.fechaNacimiento);
-            const edadMin = edadMinimaPorClase(values.clase);
-            if (edad < edadMin) {
-              setMessage({ type: 'error', text: `El titular debe tener al menos ${edadMin} años para la clase seleccionada.` });
+            if (clasesSeleccionadas.length === 0) {
+              setMessage({ type: 'error', text: 'Debe seleccionar al menos una clase.' });
               setSubmitting(false);
               return;
             }
+
+            // Validación de edad mínima para cada clase
+            const edad = calcularEdad(titular.fechaNacimiento);
+            for (const clase of clasesSeleccionadas) {
+              const edadMin = edadMinimaPorClase(clase.value);
+              if (edad < edadMin) {
+                setMessage({ type: 'error', text: `El titular debe tener al menos ${edadMin} años para la clase ${clase.value}.` });
+                setSubmitting(false);
+                return;
+              }
+            }
+
             // Validación profesional
-            if (['C', 'D', 'E'].includes(values.clase)) {
+            const tieneClaseProfesional = clasesSeleccionadas.some(c => ['C', 'D', 'E'].includes(c.value));
+            if (tieneClaseProfesional) {
               if (!profesionalOk) {
                 setMessage({ type: 'error', text: profesionalError || 'No cumple requisitos para licencia profesional.' });
                 setSubmitting(false);
@@ -153,10 +221,12 @@ const LicenseRegisterForm = () => {
                 return;
               }
             }
+
             // Registrar licencia
             try {
               await axios.post('http://localhost:8080/api/licencias', {
-                ...values,
+                clases: clasesSeleccionadas.map(c => c.value),
+                observaciones: values.observaciones,
                 titular: {
                   tipodocumento: titular.tipodocumento,
                   documento: titular.documento,
@@ -167,6 +237,7 @@ const LicenseRegisterForm = () => {
               setMessage({ type: 'success', text: '¡Licencia registrada exitosamente!' });
               resetForm();
               setTitular(null);
+              setClasesSeleccionadas([]);
               setVigencia('');
               setCosto('');
             } catch (err) {
@@ -176,21 +247,59 @@ const LicenseRegisterForm = () => {
             }
           }}
         >
-          {({ values, isSubmitting }) => (
+          {({ values, isSubmitting, setFieldValue }) => (
             <Form className="space-y-4">
               <div>
                 <label htmlFor="clase" className="block text-sm font-medium text-gray-700 mb-1">Clase solicitada</label>
-                <Field as="select" name="clase" id="clase" className="block w-full px-3 py-2 border rounded">
-                  <option value="">Seleccione clase</option>
-                  {CLASES.map(opt => <option key={opt.value} value={opt.value}>{opt.value} - {opt.label}</option>)}
-                </Field>
+                <div className="flex gap-2">
+                  <Field as="select" name="clase" id="clase" className="block w-full px-3 py-2 border rounded">
+                    <option value="">Seleccione clase</option>
+                    {clasesDisponibles.map(opt => (
+                      <option key={opt.value} value={opt.value}>{opt.value} - {opt.label}</option>
+                    ))}
+                  </Field>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      agregarClase(values.clase);
+                      setFieldValue('clase', '');
+                    }}
+                    disabled={!values.clase}
+                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                  >
+                    Agregar
+                  </button>
+                </div>
                 <ErrorMessage name="clase" component="div" className="text-red-500 text-xs mt-1" />
               </div>
+
+              {/* Lista de clases seleccionadas */}
+              {clasesSeleccionadas.length > 0 && (
+                <div className="mt-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Clases seleccionadas:</label>
+                  <div className="space-y-2">
+                    {clasesSeleccionadas.map((clase) => (
+                      <div key={clase.value} className="flex items-center justify-between bg-gray-50 p-2 rounded border">
+                        <span>{clase.value} - {clase.label}</span>
+                        <button
+                          type="button"
+                          onClick={() => eliminarClase(clase.value)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          Eliminar
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div>
                 <label htmlFor="observaciones" className="block text-sm font-medium text-gray-700 mb-1">Observaciones / Limitaciones</label>
                 <Field as="textarea" name="observaciones" id="observaciones" rows={2} className="block w-full px-3 py-2 border rounded" placeholder="Ingrese observaciones si corresponde..." />
                 <ErrorMessage name="observaciones" component="div" className="text-red-500 text-xs mt-1" />
               </div>
+
               {/* Vigencia y costo */}
               <div className="flex gap-4">
                 <div className="flex-1">
@@ -202,13 +311,15 @@ const LicenseRegisterForm = () => {
                   <span className="font-semibold">{costo ? `$${costo}` : '-'}</span>
                 </div>
               </div>
+
               {/* Mensaje de error profesional */}
-              {profesionalError && ['C', 'D', 'E'].includes(values.clase) && (
+              {profesionalError && clasesSeleccionadas.some(c => ['C', 'D', 'E'].includes(c.value)) && (
                 <div className="text-red-500 text-xs">{profesionalError}</div>
               )}
+
               <button
                 type="submit"
-                disabled={isSubmitting || !titular}
+                disabled={isSubmitting || !titular || clasesSeleccionadas.length === 0}
                 className="w-full py-2.5 px-4 bg-indigo-600 text-white rounded font-medium hover:bg-indigo-700 disabled:opacity-50"
               >
                 {isSubmitting ? 'Registrando...' : 'Registrar Licencia'}

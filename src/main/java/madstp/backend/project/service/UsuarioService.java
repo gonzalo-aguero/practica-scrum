@@ -2,8 +2,8 @@ package madstp.backend.project.service;
 
 import java.util.List;
 import madstp.backend.project.domain.Usuario;
-import madstp.backend.project.model.TipoDocumento;
-import madstp.backend.project.model.UsuarioDTO;
+import madstp.backend.project.dto.UsuarioDTO;
+import madstp.backend.project.enums.TipoDocumentoEnum;
 import madstp.backend.project.repos.UsuarioRepository;
 import madstp.backend.project.util.NotFoundException;
 import org.springframework.data.domain.Sort;

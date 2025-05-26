@@ -1,7 +1,8 @@
 package madstp.backend.project.repos;
 
 import madstp.backend.project.domain.Titular;
-import madstp.backend.project.model.TipoDocumento;
+import madstp.backend.project.enums.TipoDocumentoEnum;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -27,7 +28,7 @@ class TitularRepositoryTest {
         Titular titular = new Titular();
         titular.setNombre("John");
         titular.setDocumento("123456");
-        titular.setTipoDocumento(TipoDocumento.DNI);
+        titular.setTipoDocumento(TipoDocumentoEnum.DNI);
         titular.setDomicilio("123 Main Street");
         titular.setFechaNacimiento(null);
         titular.setContrasena("jd1985");
@@ -48,7 +49,7 @@ class TitularRepositoryTest {
         Titular titular = new Titular();
         titular.setNombre("Jane");
         titular.setDocumento("654321");
-        titular.setTipoDocumento(TipoDocumento.PASAPORTE);
+        titular.setTipoDocumento(TipoDocumentoEnum.PASAPORTE);
         titular.setDomicilio("456 Another Street");
         titular.setFechaNacimiento(LocalDate.of(2002, 1, 8));
         titular.setContrasena("jane2023");
@@ -56,7 +57,7 @@ class TitularRepositoryTest {
         titularRepository.save(titular);
 
         // Act
-        Optional<Titular> foundTitular = titularRepository.findByTipoDocumentoAndDocumento(TipoDocumento.PASAPORTE, "654321");
+        Optional<Titular> foundTitular = titularRepository.findByTipoDocumentoAndDocumento(TipoDocumentoEnum.PASAPORTE, "654321");
 
         // Assert
         assertTrue(foundTitular.isPresent());
@@ -66,7 +67,7 @@ class TitularRepositoryTest {
     @Test
     public void testFindByTipoDocumentoAndDocumento_ReturnsEmptyWhenNotExists() {
         // Act
-        Optional<Titular> foundTitular = titularRepository.findByTipoDocumentoAndDocumento(TipoDocumento.DNI, "000000");
+        Optional<Titular> foundTitular = titularRepository.findByTipoDocumentoAndDocumento(TipoDocumentoEnum.DNI, "000000");
 
         // Assert
         assertFalse(foundTitular.isPresent());
