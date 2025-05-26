@@ -3,7 +3,8 @@ package madstp.backend.project.rest;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
-import madstp.backend.project.model.UsuarioDTO;
+
+import madstp.backend.project.dto.UsuarioDTO;
 import madstp.backend.project.service.UsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

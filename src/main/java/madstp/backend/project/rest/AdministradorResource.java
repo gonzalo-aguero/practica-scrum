@@ -4,7 +4,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.validation.Valid;
 import java.util.List;
-import madstp.backend.project.model.AdministradorDTO;
+
+import madstp.backend.project.dto.AdministradorDTO;
 import madstp.backend.project.service.AdministradorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

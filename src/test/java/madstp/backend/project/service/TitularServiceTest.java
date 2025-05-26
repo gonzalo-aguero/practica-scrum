@@ -1,8 +1,8 @@
 package madstp.backend.project.service;
 
 import madstp.backend.project.domain.Titular;
-import madstp.backend.project.model.TipoDocumento;
-import madstp.backend.project.model.TitularDTO;
+import madstp.backend.project.dto.TitularDTO;
+import madstp.backend.project.enums.TipoDocumentoEnum;
 import madstp.backend.project.repos.TitularRepository;
 import madstp.backend.project.util.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +40,7 @@ public class TitularServiceTest {
         titular.setId(1L);
         titular.setNombre("John Doe");
         titular.setDocumento("123456");
-        titular.setTipoDocumento(TipoDocumento.DNI);
+        titular.setTipoDocumento(TipoDocumentoEnum.DNI);
         titular.setDomicilio("123 Main Street");
         titular.setFechaNacimiento(LocalDate.of(1985, 5, 20));
         titular.setContrasena("jd1985");
@@ -49,7 +49,7 @@ public class TitularServiceTest {
         titularDTO.setId(1L);
         titularDTO.setNombre("John Doe");
         titularDTO.setDocumento("123456");
-        titularDTO.setTipoDocumento(TipoDocumento.DNI);
+        titularDTO.setTipoDocumento(TipoDocumentoEnum.DNI);
         titularDTO.setDomicilio("123 Main Street");
         titularDTO.setFechaNacimiento(LocalDate.of(1985, 5, 20));
         titularDTO.setContrasena("jd1985");
@@ -103,7 +103,7 @@ public class TitularServiceTest {
     @Test
     public void testGetByTipoDocumentoAndDocumento_WithValidData_ReturnTitularDTO() {
         // Arrange
-        TipoDocumento tipoDocumento = TipoDocumento.DNI;
+        TipoDocumentoEnum tipoDocumento = TipoDocumentoEnum.DNI;
         String documento = "123456";
 
         when(titularRepository.findByTipoDocumentoAndDocumento(tipoDocumento, documento)).thenReturn(Optional.of(titular));
@@ -120,7 +120,7 @@ public class TitularServiceTest {
     @Test
     public void testGetByTipoDocumentoAndDocumento_WithInvalidData_ThrowsNotFoundException() {
         // Arrange
-        TipoDocumento tipoDocumento = TipoDocumento.DNI;
+        TipoDocumentoEnum tipoDocumento = TipoDocumentoEnum.DNI;
         String documento = "999999";
 
         when(titularRepository.findByTipoDocumentoAndDocumento(tipoDocumento, documento)).thenReturn(Optional.empty());

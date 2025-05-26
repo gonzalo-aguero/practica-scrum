@@ -1,7 +1,7 @@
-package madstp.backend.project.model;
+package madstp.backend.project.enums;
 
 
-public enum TipoDocumento {
+public enum TipoDocumentoEnum {
 
     DNI,
     CEDULA_IDENTIDAD,

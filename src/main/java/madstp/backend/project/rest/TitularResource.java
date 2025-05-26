@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import jakarta.validation.constraints.NotBlank;
-import madstp.backend.project.model.TipoDocumento;
-import madstp.backend.project.model.TitularDTO;
+import madstp.backend.project.dto.TitularDTO;
+import madstp.backend.project.enums.TipoDocumentoEnum;
 import madstp.backend.project.service.TitularService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -39,7 +39,7 @@ public class TitularResource {
 
     @GetMapping
     @ApiResponse(responseCode = "200")
-    public ResponseEntity<?> getTitularByTipoDocumentoAndDocumento(@RequestParam(required = false) final TipoDocumento tipoDocumento, @RequestParam(required = false) @NotBlank(message = "El documento es obligatorio") final String documento) {
+    public ResponseEntity<?> getTitularByTipoDocumentoAndDocumento(@RequestParam(required = false) final TipoDocumentoEnum tipoDocumento, @RequestParam(required = false) @NotBlank(message = "El documento es obligatorio") final String documento) {
         TitularDTO titularDTO = titularService.getByTipoDocumentoAndDocumento(tipoDocumento, documento);
         if (titularDTO == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT)

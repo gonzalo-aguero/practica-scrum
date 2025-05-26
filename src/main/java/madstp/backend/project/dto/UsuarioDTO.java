@@ -1,16 +1,16 @@
-package madstp.backend.project.model;
+package madstp.backend.project.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
+import madstp.backend.project.enums.TipoDocumentoEnum;
 
 
 @Getter
 @Setter
-public class TitularDTO {
+public class UsuarioDTO {
 
     private Long id;
 
@@ -20,11 +20,11 @@ public class TitularDTO {
 
     @NotNull
     @Size(max = 255)
-    @TitularDocumentoUnique
+    @UsuarioDocumentoUnique
     private String documento;
 
     @NotNull
-    private TipoDocumento tipoDocumento;
+    private TipoDocumentoEnum tipodocumento;
 
     @NotNull
     @Size(max = 255)
@@ -36,6 +36,6 @@ public class TitularDTO {
     @NotNull
     private String contrasena;
 
-    private Boolean esDonanteOrganos;
-
+    @NotNull
+    private String confirmarContrasena;
 }

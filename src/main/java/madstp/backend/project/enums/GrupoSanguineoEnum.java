@@ -1,7 +1,7 @@
-package madstp.backend.project.model;
+package madstp.backend.project.enums;
 
 
-public enum GrupoSanguineo {
+public enum GrupoSanguineoEnum {
 
     A_POSITIVO,
     A_NEGATIVO,

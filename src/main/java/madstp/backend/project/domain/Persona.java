@@ -11,7 +11,8 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 
 import lombok.*;
-import madstp.backend.project.model.TipoDocumento;
+import madstp.backend.project.enums.TipoDocumentoEnum;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -44,7 +45,7 @@ public abstract class Persona {
     private String documento;
 
     @Column(nullable = false)
-    private TipoDocumento tipoDocumento;
+    private TipoDocumentoEnum tipoDocumento;
 
     @Column(nullable=false)
     private String cuil;

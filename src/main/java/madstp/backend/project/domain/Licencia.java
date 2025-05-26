@@ -2,8 +2,8 @@ package madstp.backend.project.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import madstp.backend.project.model.ClaseLicenciaEnum;
-import madstp.backend.project.model.GrupoSanguineo;
+import madstp.backend.project.enums.ClaseLicenciaEnum;
+import madstp.backend.project.enums.GrupoSanguineoEnum;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -52,7 +52,7 @@ public class Licencia {
     Boolean esDonante;
 
     @Column(nullable = false)
-    GrupoSanguineo grupoSanguineo;
+    GrupoSanguineoEnum grupoSanguineo;
 
     @Column(nullable = false)
     String observaciones;

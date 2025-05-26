@@ -2,7 +2,7 @@ package madstp.backend.project.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import madstp.backend.project.model.ClaseLicenciaEnum;
+import madstp.backend.project.enums.ClaseLicenciaEnum;
 
 import java.time.LocalDate;
 

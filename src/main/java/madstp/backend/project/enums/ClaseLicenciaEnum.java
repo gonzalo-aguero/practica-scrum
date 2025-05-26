@@ -1,4 +1,4 @@
-package madstp.backend.project.model;
+package madstp.backend.project.enums;
 
 
 public enum ClaseLicenciaEnum {

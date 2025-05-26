@@ -2,7 +2,7 @@ package madstp.backend.project.service;
 
 import java.util.List;
 import madstp.backend.project.domain.Administrador;
-import madstp.backend.project.model.AdministradorDTO;
+import madstp.backend.project.dto.AdministradorDTO;
 import madstp.backend.project.repos.AdministradorRepository;
 import madstp.backend.project.util.NotFoundException;
 import org.springframework.data.domain.Sort;
