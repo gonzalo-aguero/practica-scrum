@@ -39,7 +39,7 @@ public class TitularResource {
 
     @GetMapping
     @ApiResponse(responseCode = "200")
-    public ResponseEntity<?> getTitularByTipoDocumentoAndDocumento(@RequestParam(required = false) @NotBlank(message = "El tipo de documento es obligatorio") final TipoDocumento tipoDocumento, @RequestParam(required = false) @NotBlank(message = "El documento es obligatorio") final String documento) {
+    public ResponseEntity<?> getTitularByTipoDocumentoAndDocumento(@RequestParam(required = false) final TipoDocumento tipoDocumento, @RequestParam(required = false) @NotBlank(message = "El documento es obligatorio") final String documento) {
         TitularDTO titularDTO = titularService.getByTipoDocumentoAndDocumento(tipoDocumento, documento);
         if (titularDTO == null) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT)
