@@ -57,4 +57,7 @@ public class Licencia {
     @Column(nullable = false)
     String observaciones;
 
+    @OneToMany(mappedBy = "Licencia")
+    List<ClaseLicencia> clasesLicencia;
+
 }

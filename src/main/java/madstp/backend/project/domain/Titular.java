@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
 import lombok.*;
+import madstp.backend.project.enums.GrupoSanguineoEnum;
 
 
 @Getter
@@ -15,5 +16,8 @@ public class Titular extends Persona {
 
     @Column
     private Boolean esDonanteOrganos;
+
+    @Column(nullable = false)
+    GrupoSanguineoEnum grupoSanguineo;
 
 }
