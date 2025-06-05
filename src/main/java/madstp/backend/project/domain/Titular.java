@@ -13,7 +13,6 @@ import madstp.backend.project.enums.GrupoSanguineoEnum;
 @Table(name = "Titular", schema = "public")
 public class Titular extends Persona {
 
-
     @Column
     private Boolean esDonanteOrganos;
 
