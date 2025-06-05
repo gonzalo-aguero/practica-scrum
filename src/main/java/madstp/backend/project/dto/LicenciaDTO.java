@@ -1,20 +1,15 @@
 package madstp.backend.project.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import java.time.LocalDate;
-import lombok.Getter;
-import lombok.Setter;
 import madstp.backend.project.enums.GrupoSanguineoEnum;
 import madstp.backend.project.enums.TipoDocumentoEnum;
 
+import java.time.LocalDate;
 
-@Getter
-@Setter
-public class TitularDTO {
+public class LicenciaDTO {
 
-    private Long id;
+    private long id;
 
     @NotNull
     @Size(max = 255)
@@ -22,26 +17,28 @@ public class TitularDTO {
 
     @NotNull
     @Size(max = 255)
-    @TitularDocumentoUnique
-    private String documento;
-
-    @NotNull
-    private TipoDocumentoEnum tipoDocumento;
+    private String apellido;
 
     @NotNull
     @Size(max = 255)
-    private String domicilio;
+    private String cuil;
 
     @NotNull
+    @Size(max = 255)
+    private String direccion;
+
+    @NotNull
+    @Size(max = 255)
+    private String nroLicencia;
+
+    @NotNull
+    @Size(max = 255)
     private LocalDate fechaNacimiento;
-
-    @NotNull
-    private String contrasena;
 
     @NotNull
     private GrupoSanguineoEnum grupoSanguineo;
 
-    @NotNull
     private Boolean esDonanteOrganos;
 
+    private String observaciones;
 }

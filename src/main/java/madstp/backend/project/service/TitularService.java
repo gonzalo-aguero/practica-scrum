@@ -63,6 +63,7 @@ public class TitularService {
         titularDTO.setDomicilio(titular.getDomicilio());
         titularDTO.setFechaNacimiento(titular.getFechaNacimiento());
         titularDTO.setEsDonanteOrganos(titular.getEsDonanteOrganos());
+        titularDTO.setGrupoSanguineo(titular.getGrupoSanguineo());
         return titularDTO;
     }
 

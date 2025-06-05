@@ -42,7 +42,6 @@ const LicenseRegisterForm = () => {
   const [titular, setTitular] = useState(null);
   const [buscando, setBuscando] = useState(false);
   const [busquedaError, setBusquedaError] = useState('');
-  const [vigencia, setVigencia] = useState('');
   const [costo, setCosto] = useState('');
   const [profesionalOk] = useState(true);
   const [profesionalError] = useState('');
@@ -60,6 +59,35 @@ const LicenseRegisterForm = () => {
       setClasesDisponibles(CLASES);
     }
   }, [titular]);
+
+  const calcularCosto = async () => {
+    console.log('Calculando costo...');
+    console.log('Titular:', titular);
+    console.log('Clases seleccionadas:', clasesSeleccionadas);
+    if (!titular || clasesSeleccionadas.length === 0) {
+      setCosto('');
+      return;
+    }
+
+    try {
+      const res = await axios.get('http://localhost:8080/api/licencias/costo', {
+        params: {
+          tipodocumento: titular.tipodocumento,
+          documento: titular.documento,
+          clases: clasesSeleccionadas.map(c => c.value).join(',')
+        }
+      });
+      setCosto(res.data.costo);
+    } catch (error) {
+      console.error('Error al calcular el costo:', error);
+      setCosto('');
+    }
+  };
+
+  // Efecto para calcular el costo cuando cambian las clases seleccionadas
+  useEffect(() => {
+    calcularCosto();
+  }, [clasesSeleccionadas, titular]);
 
   const buscarTitular = async (tipo, numero) => {
     setBuscando(true);
@@ -152,7 +180,7 @@ const LicenseRegisterForm = () => {
             <div><span className="font-medium">Nombre:</span> {titular.nombre}</div>
             <div><span className="font-medium">Fecha Nac.:</span> {titular.fechaNacimiento}</div>
             <div><span className="font-medium">Dirección:</span> {titular.domicilio}</div>
-            <div><span className="font-medium">Grupo Sanguíneo:</span> {titular.grupoSanguineo} {titular.factorRH !== undefined ? titular.factorRH : 'undefined'}</div>
+            <div><span className="font-medium">Grupo Sanguíneo:</span> {titular.grupoSanguineo}</div>
             <div><span className="font-medium">Donante de órganos:</span> {titular.esDonanteOrganos ? 'Sí' : 'No'}</div>
             {titular.licencias && titular.licencias.length > 0 && (
               <div className="mt-2">
@@ -238,7 +266,6 @@ const LicenseRegisterForm = () => {
               resetForm();
               setTitular(null);
               setClasesSeleccionadas([]);
-              setVigencia('');
               setCosto('');
             } catch (err) {
               setMessage({ type: 'error', text: err.response?.data?.message || 'Error al registrar licencia.' });
@@ -300,12 +327,8 @@ const LicenseRegisterForm = () => {
                 <ErrorMessage name="observaciones" component="div" className="text-red-500 text-xs mt-1" />
               </div>
 
-              {/* Vigencia y costo */}
+              {/* Costo de emitir Licencia */}
               <div className="flex gap-4">
-                <div className="flex-1">
-                  <span className="block text-xs text-gray-500">Vigencia</span>
-                  <span className="font-semibold">{vigencia ? `${vigencia} años` : '-'}</span>
-                </div>
                 <div className="flex-1">
                   <span className="block text-xs text-gray-500">Costo</span>
                   <span className="font-semibold">{costo ? `$${costo}` : '-'}</span>

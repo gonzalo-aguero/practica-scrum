@@ -2,9 +2,11 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useHeader } from "./HeaderContext.jsx";
-import logo from '../assets/municipalidad-logo.svg';
+import logo from '../assets/Santa_Fe_Capital.png';
 
 function Header() {
+    const normalButtonStyle = "text-gray-600 hover:text-[#12bc8e] font-medium px-3 py-2 rounded-md text-medium";
+    const specialButtonStyle = "bg-[#12bc8e] text-white hover:opacity-85 px-3 py-2 rounded-md text-medium font-medium";
     const location = useLocation();
     const { headerState, setHeaderState } = useHeader();
 
@@ -32,19 +34,19 @@ function Header() {
                     <div className="flex items-center space-x-4">
                         <Link
                             to="/homeAdministrador"
-                            className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                            className={normalButtonStyle}
                         >
                             Inicio
                         </Link>
                         <Link
                             to="/alta-usuario"
-                            className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                            className={normalButtonStyle}
                         >
                             Registrar Usuario
                         </Link>
                         <Link
                             to="/"
-                            className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                            className={specialButtonStyle}
                         >
                             Cerrar Sesión
                         </Link>
@@ -56,19 +58,25 @@ function Header() {
                     <div className="flex items-center space-x-4">
                         <Link
                             to="/homeUsuario"
-                            className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                            className={normalButtonStyle}
                         >
                             Inicio
                         </Link>
                         <Link
                             to="/alta-titular"
-                            className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                            className={normalButtonStyle}
                         >
                             Registrar Titular
                         </Link>
                         <Link
+                            to="/emitir-licencia"
+                            className={normalButtonStyle}
+                        >
+                            Registrar Licencia
+                        </Link>
+                        <Link
                             to="/"
-                            className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                            className={specialButtonStyle}
                         >
                             Cerrar Sesión
                         </Link>
@@ -80,13 +88,13 @@ function Header() {
                     <nav className="flex items-center space-x-4">
                         <Link
                             to="/"
-                            className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 transition duration-150 ease-in-out"
+                            className={normalButtonStyle}
                         >
                             Inicio
                         </Link>
                         <Link
                             to="/login"
-                            className="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:text-indigo-600 hover:bg-gray-50 transition duration-150 ease-in-out"
+                            className={specialButtonStyle}
                         >
                             Iniciar Sesión
                         </Link>
@@ -96,19 +104,19 @@ function Header() {
     };
 
     return (
-        <header className="bg-white shadow-md">
+        <header className="bg-white shadow-md py-4">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     <div className="flex items-center">
                         <Link to="/" className="flex items-center">
                             <img
-                                className="h-8 w-auto"
+                                className="h-20 w-auto"
                                 src={logo}
-                                alt="Logo Municipalidad"
+                                alt="Logo Municipalidad de Santa Fe"
                             />
-                            <span className="ml-3 text-xl font-semibold text-gray-900">
-                Municipalidad de Santa Fe
-              </span>
+                                {/* <span className="ml-3 text-medium font-semibold text-[#212121]">
+                    Municipalidad de Santa Fe
+                </span> */}
                         </Link>
                     </div>
                     {renderNavigationLinks()}
