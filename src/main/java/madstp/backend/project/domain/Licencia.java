@@ -5,7 +5,6 @@ import lombok.*;
 import madstp.backend.project.enums.ClaseLicenciaEnum;
 import madstp.backend.project.enums.GrupoSanguineoEnum;
 
-
 import java.time.LocalDate;
 import java.util.List;
 
@@ -31,47 +30,34 @@ public class Licencia {
     )
     private Long id;
 
-//    @Column(nullable = false)
-//    String nroLicencia;
-//
-//    @Column(nullable = false)
-//    String cuil;
-//
-//    @Column(nullable = false)
-//    String apellido;
-//
-//    @Column(nullable = false)
-//    String nombre;
-//
-//    @Column(nullable = false)
-//    String direccion;
-//
-//    @Column(nullable = false)
-//    String fechaNacimiento;
-//
-//    @Column(nullable = false)
-//    Boolean esDonante;
-//
-//    @Column(nullable = false)
-//    GrupoSanguineoEnum grupoSanguineo;
+    @Column(nullable = false)
+    String nroLicencia;
 
     @Column(nullable = false)
-    private String numero;
+    String cuil;
+
+    @Column(nullable = false)
+    String apellido;
+
+    @Column(nullable = false)
+    String nombre;
+
+    @Column(nullable = false)
+    String direccion;
+
+    @Column(nullable = false)
+    String fechaNacimiento;
+
+    @Column(nullable = false)
+    Boolean esDonante;
+
+    @Column(nullable = false)
+    GrupoSanguineoEnum grupoSanguineo;
+
+    @Column(nullable = false)
+    String observaciones;
 
     @OneToMany(mappedBy = "Licencia")
-    private List<ClaseLicencia> clasesLicencia;
-
-    @Column(nullable = false)
-    private String observaciones;
-
-    @Column(nullable = false)
-    private LocalDate fechaEmision;
-
-    @Column(nullable = false)
-    private LocalDate fechaExpiracion;
-
-    @ManyToOne
-    @JoinColumn(name = "documento_titular", referencedColumnName = "documento", nullable = false)
-    private Titular titular;
+    List<ClaseLicencia> clasesLicencia;
 
 }
