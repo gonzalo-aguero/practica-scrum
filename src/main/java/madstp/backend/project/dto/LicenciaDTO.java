@@ -1,4 +1,4 @@
-package madstp.backend.project.model;
+package madstp.backend.project.dto;
 
 import madstp.backend.project.model.ClaseLicenciaDTO;
 import jakarta.validation.constraints.NotNull;
@@ -21,12 +21,6 @@ public class LicenciaDTO {
     @NotNull
     @Size(max = 255)
     private String observaciones;
-
-    @NotNull
-    private LocalDate fechaEmision;
-
-    @NotNull
-    private LocalDate fechaExpiracion;
 
     @NotNull
     @Size(max = 255)

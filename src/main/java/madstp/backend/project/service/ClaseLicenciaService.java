@@ -53,7 +53,7 @@ public class ClaseLicenciaService {
         claseLicenciaRepository.deleteById(id);
     }
 
-    private ClaseLicenciaDTO mapToDTO(final ClaseLicencia claseLicencia,
+    public ClaseLicenciaDTO mapToDTO(final ClaseLicencia claseLicencia,
                                       final ClaseLicenciaDTO claseLicenciaDTO) {
         claseLicenciaDTO.setId(claseLicencia.getId());
         claseLicenciaDTO.setClaseLicenciaEnum(claseLicencia.getClaseLicenciaEnum());
@@ -63,7 +63,7 @@ public class ClaseLicenciaService {
         return claseLicenciaDTO;
     }
 
-    private ClaseLicencia mapToEntity(final ClaseLicenciaDTO claseLicenciaDTO,
+    public ClaseLicencia mapToEntity(final ClaseLicenciaDTO claseLicenciaDTO,
                                       final ClaseLicencia claseLicencia) {
         claseLicencia.setClaseLicenciaEnum(claseLicenciaDTO.getClaseLicenciaEnum());
         claseLicencia.setFechaEmision(claseLicenciaDTO.getFechaEmision());
