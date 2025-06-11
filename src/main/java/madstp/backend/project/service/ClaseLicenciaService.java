@@ -3,7 +3,7 @@ package madstp.backend.project.service;
 import java.util.List;
 import madstp.backend.project.domain.ClaseLicencia;
 import madstp.backend.project.domain.Usuario;
-import madstp.backend.project.model.ClaseLicenciaDTO;
+import madstp.backend.project.dto.ClaseLicenciaDTO;
 import madstp.backend.project.repos.ClaseLicenciaRepository;
 import madstp.backend.project.repos.UsuarioRepository;
 import madstp.backend.project.util.NotFoundException;

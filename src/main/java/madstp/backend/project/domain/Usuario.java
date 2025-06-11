@@ -20,6 +20,6 @@ import org.springframework.stereotype.Component;
 @Table(name = "Usuario", schema = "public")
 public class Usuario extends Persona {
 
-    @OneToMany(mappedBy = "Usuario")
+    @OneToMany(mappedBy = "usuarioEmisor")
     List<ClaseLicencia> licenciasEmitidas;
 }

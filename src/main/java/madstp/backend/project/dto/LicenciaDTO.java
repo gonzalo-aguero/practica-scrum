@@ -1,6 +1,6 @@
 package madstp.backend.project.dto;
 
-import madstp.backend.project.model.ClaseLicenciaDTO;
+import madstp.backend.project.dto.ClaseLicenciaDTO;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
