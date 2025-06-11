@@ -30,6 +30,10 @@ public class Licencia {
     )
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "titular_id", nullable = false)
+    private Titular titular;
+
     @Column(nullable = false)
     String nroLicencia;
 

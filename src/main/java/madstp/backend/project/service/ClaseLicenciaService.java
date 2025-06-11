@@ -55,7 +55,6 @@ public class ClaseLicenciaService {
 
     public ClaseLicenciaDTO mapToDTO(final ClaseLicencia claseLicencia,
                                       final ClaseLicenciaDTO claseLicenciaDTO) {
-        claseLicenciaDTO.setId(claseLicencia.getId());
         claseLicenciaDTO.setClaseLicenciaEnum(claseLicencia.getClaseLicenciaEnum());
         claseLicenciaDTO.setFechaEmision(claseLicencia.getFechaEmision());
         claseLicenciaDTO.setFechaVencimiento(claseLicencia.getFechaVencimiento());

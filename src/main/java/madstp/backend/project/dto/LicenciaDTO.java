@@ -26,4 +26,6 @@ public class LicenciaDTO {
     @Size(max = 255)
     private String numero;
 
+    @NotNull
+    private Long titularId;
 }
