@@ -142,3 +142,12 @@ Con estos pasos tendrás:
 * La base de datos corriendo en Docker.
 * El backend de Spring Boot sirviendo la lógica del negocio.
 * El frontend de React ejecutándose y conectado a tu API.
+
+
+---
+## Conectarse a PostGreeSQL desde Terminal:
+~~~bash
+docker exec -it postgres_db psql -U postgres -d project
+~~~
+## Conectarse a PostGreeSQL desde Navegador:
+[http://0.0.0.0:8081/](http://0.0.0.0:8081/)

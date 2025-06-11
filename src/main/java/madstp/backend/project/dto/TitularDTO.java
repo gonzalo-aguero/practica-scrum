@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import lombok.Getter;
 import lombok.Setter;
+import madstp.backend.project.enums.GrupoSanguineoEnum;
 import madstp.backend.project.enums.TipoDocumentoEnum;
 
 
@@ -37,6 +38,10 @@ public class TitularDTO {
     @NotNull
     private String contrasena;
 
+    @NotNull
+    private GrupoSanguineoEnum grupoSanguineo;
+
+    @NotNull
     private Boolean esDonanteOrganos;
 
 }
