@@ -1,5 +1,6 @@
 package madstp.backend.project.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -79,9 +80,9 @@ public class LicenciaService {
             claseDTO.setFechaEmision(fechaInicioVigencia);
             claseDTO.setFechaVencimiento(fechaVencimiento);
         }
-        
+
         // Calcular costo de la Licencia
-        Integer costo = calcularCostoLicencia(licenciaDTO, 1);
+        //Integer costo = obtenerCostoLicencia(licenciaDTO);
 
         final Licencia licencia = new Licencia();
         mapToEntity(licenciaDTO, licencia);
@@ -149,9 +150,91 @@ public class LicenciaService {
         return 1;
     }
 
-    private Integer calcularCostoLicencia(LicenciaDTO licenciaDTO, Integer vigenciaAnios) {
+    private Integer calcularCostoLicencia(int vigenciaAnios, List<ClaseLicenciaEnum> listaClaseLicenciaEnum){
+        int costo = 8;//8 por gastos administrativos.
+        if(vigenciaAnios == 5){
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.A)){
+                costo += 40;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.B)){
+                costo += 40;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.C)){
+                costo += 47;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.D)){
+                costo += 59;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.G)){
+                costo += 40;
+            }
+        }else if(vigenciaAnios == 4){
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.A)){
+                costo += 30;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.B)){
+                costo += 30;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.C)){
+                costo += 35;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.D)){
+                costo += 44;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.G)){
+                costo += 30;
+            }
+        }else if(vigenciaAnios == 3){
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.A)){
+                costo += 25;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.B)){
+                costo += 25;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.C)){
+                costo += 30;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.D)){
+                costo += 39;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.G)){
+                costo += 25;
+            }
+        }else if(vigenciaAnios == 1){
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.A)){
+                costo += 20;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.B)){
+                costo += 20;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.C)){
+                costo += 23;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.D)){
+                costo += 29;
+            }
+            if(listaClaseLicenciaEnum.contains(ClaseLicenciaEnum.G)){
+                costo += 20;
+            }
+        }
+        return costo;
+    }
+
+    private Integer obtenerCostoLicencia(LicenciaDTO licenciaDTO) {
         // TODO: Implementar lógica real acá o en la clase que corresponda. Modificar firma del  método en caso de ser necesario.
-        return 0;
+        TitularDTO titular = titularService.get(licenciaDTO.getTitularId());
+        LocalDate fechaNacimiento = titular.getFechaNacimiento();
+        int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+        LocalDate fechaInicioVigencia = LocalDate.now();
+
+        int vigenciaAnios = calcularVigenciaLicencia(edad, fechaInicioVigencia, fechaNacimiento, licenciaDTO);
+
+        List<ClaseLicenciaEnum> listaClaseLicenciaEnum = licenciaDTO.getClases()
+                .stream()
+                .map(ClaseLicenciaDTO::getClaseLicenciaEnum)
+                .collect(Collectors.toList());
+
+        return calcularCostoLicencia(vigenciaAnios, listaClaseLicenciaEnum);
     }
 
     public void update(final Long id, final  @Valid  LicenciaDTO licenciaDTO) {
