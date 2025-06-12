@@ -9,6 +9,9 @@ import madstp.backend.project.enums.ClaseLicenciaEnum;
 @Getter
 @Setter
 public class ClaseLicenciaDTO {
+
+    private Long licenciaId;
+
     @NotNull
     private ClaseLicenciaEnum claseLicenciaEnum;
 

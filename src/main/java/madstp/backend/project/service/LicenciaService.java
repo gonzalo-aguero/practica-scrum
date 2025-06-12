@@ -1,6 +1,7 @@
 package madstp.backend.project.service;
 
-import java.util.ArrayList;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -11,8 +12,6 @@ import madstp.backend.project.domain.Licencia;
 import madstp.backend.project.dto.LicenciaDTO;
 import madstp.backend.project.dto.ClaseLicenciaDTO;
 import madstp.backend.project.repos.LicenciaRepository;
-import madstp.backend.project.service.TitularService;
-import madstp.backend.project.service.ClaseLicenciaService;
 import madstp.backend.project.util.NotFoundException;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -86,7 +85,9 @@ public class LicenciaService {
 
         final Licencia licencia = new Licencia();
         mapToEntity(licenciaDTO, licencia);
-        
+
+        licencia.setNroLicencia(titular.getDocumento());
+
         // Hay que de alguna forma guardar o devolver el costo de la licencia para mostrarle al usuario...
         // idem con la vigencia
         return licenciaRepository.save(licencia).getId();
@@ -145,9 +146,45 @@ public class LicenciaService {
         }
     }
 
-    private Integer calcularVigenciaLicencia(Integer edad, LocalDate fechaInicio, LocalDate fechaNacimiento, LicenciaDTO licenciaDTO) {
-        // TODO: Implementar lógica real acá o en la clase que corresponda. Modificar firma del  método en caso de ser necesario.
-        return 1;
+    private LocalDate calcularVigenciaLicencia(long titularId, TitularService titularService, ClaseLicenciaService claseLicenciaService) {
+
+        TitularDTO titular = titularService.get(titularId);
+
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate fechaNac = titular.getFechaNacimiento();
+        LocalDate fechaVencimiento;
+
+        Long edad = ChronoUnit.YEARS.between(fechaNac, LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")));
+
+        if(edad<21){
+            if(licenciaRepository.findByTitular_Id(titularId).isPresent()){
+                fechaVencimiento = LocalDate.of(LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")).getYear()+3, fechaNac.getMonth(), fechaNac.getDayOfMonth());
+            }
+        else{
+                fechaVencimiento = LocalDate.of(LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")).getYear()+1, fechaNac.getMonth(), fechaNac.getDayOfMonth());
+            }
+        }
+        else {
+            if(edad >=21 && edad <= 46){
+                fechaVencimiento = LocalDate.of(LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")).getYear()+5, fechaNac.getMonth(), fechaNac.getDayOfMonth());
+            }
+            else {
+                if(edad > 46 && edad <= 60){
+                    fechaVencimiento = LocalDate.of(LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")).getYear()+4, fechaNac.getMonth(), fechaNac.getDayOfMonth());
+                }
+                else{
+                    if(edad > 60 && edad <= 70){
+                        fechaVencimiento = LocalDate.of(LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")).getYear()+3, fechaNac.getMonth(), fechaNac.getDayOfMonth());
+                    }
+                    else{
+                        fechaVencimiento = LocalDate.of(LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")).getYear()+1, fechaNac.getMonth(), fechaNac.getDayOfMonth());
+                    }
+                }
+            }
+        }
+
+        return fechaVencimiento;
+
     }
 
     private Integer calcularCostoLicencia(int vigenciaAnios, List<ClaseLicenciaEnum> listaClaseLicenciaEnum){
@@ -259,7 +296,7 @@ public class LicenciaService {
         licenciaDTO.setClases(clasesDTO);
 
         licenciaDTO.setObservaciones(licencia.getObservaciones());
-        licenciaDTO.setNumero(licencia.getNroLicencia());
+        licenciaDTO.setNumeroDocumento(licencia.getNroLicencia());
         return licenciaDTO;
     }
 
@@ -273,7 +310,7 @@ public class LicenciaService {
         licencia.setClasesLicencia(clases);
 
         licencia.setObservaciones(licenciaDTO.getObservaciones());
-        licencia.setNroLicencia(licenciaDTO.getNumero());
+
         return licencia;
     }
 

@@ -1,7 +1,10 @@
 package madstp.backend.project.service;
 
 import java.util.List;
+import java.util.Optional;
+
 import madstp.backend.project.domain.ClaseLicencia;
+import madstp.backend.project.domain.Licencia;
 import madstp.backend.project.domain.Usuario;
 import madstp.backend.project.dto.ClaseLicenciaDTO;
 import madstp.backend.project.repos.ClaseLicenciaRepository;
@@ -28,6 +31,12 @@ public class ClaseLicenciaService {
         return claseLicencias.stream()
                 .map(claseLicencia -> mapToDTO(claseLicencia, new ClaseLicenciaDTO()))
                 .toList();
+    }
+
+    public Optional<ClaseLicenciaDTO> findAllByLicencia(final Licencia licencia) {
+        final Optional<ClaseLicenciaDTO> claseLicencias = claseLicenciaRepository.findByLicencia(licencia);
+
+        return claseLicencias;
     }
 
     public ClaseLicenciaDTO get(final Long id) {
