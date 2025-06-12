@@ -30,33 +30,11 @@ public class Licencia {
     )
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "titular_id", nullable = false)
+    @OneToOne(mappedBy = "licencia", fetch = FetchType.LAZY)
     private Titular titular;
 
     @Column(nullable = false)
     String nroLicencia;
-
-    @Column(nullable = false)
-    String cuil;
-
-    @Column(nullable = false)
-    String apellido;
-
-    @Column(nullable = false)
-    String nombre;
-
-    @Column(nullable = false)
-    String direccion;
-
-    @Column(nullable = false)
-    String fechaNacimiento;
-
-    @Column(nullable = false)
-    Boolean esDonante;
-
-    @Column(nullable = false)
-    GrupoSanguineoEnum grupoSanguineo;
 
     @Column(nullable = false)
     String observaciones;
