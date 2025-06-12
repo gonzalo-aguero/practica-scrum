@@ -30,7 +30,7 @@ public class Licencia {
     )
     private Long id;
 
-    @OneToOne(mappedBy = "licencia", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "licencia", fetch = FetchType.EAGER)
     private Titular titular;
 
     @Column(nullable = false)
@@ -39,7 +39,7 @@ public class Licencia {
     @Column(nullable = false)
     String observaciones;
 
-    @OneToMany(mappedBy = "licencia")
+    @OneToMany(mappedBy = "licencia", fetch = FetchType.EAGER)
     List<ClaseLicencia> clasesLicencia;
 
 }

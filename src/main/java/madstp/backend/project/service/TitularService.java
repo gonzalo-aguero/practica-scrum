@@ -3,6 +3,7 @@ package madstp.backend.project.service;
 import java.util.List;
 import madstp.backend.project.domain.Titular;
 import madstp.backend.project.dto.TitularDTO;
+import madstp.backend.project.dto.LicenciaDTO;
 import madstp.backend.project.enums.TipoDocumentoEnum;
 import madstp.backend.project.repos.TitularRepository;
 import madstp.backend.project.util.NotFoundException;
@@ -64,6 +65,15 @@ public class TitularService {
         titularDTO.setFechaNacimiento(titular.getFechaNacimiento());
         titularDTO.setEsDonanteOrganos(titular.getEsDonanteOrganos());
         titularDTO.setGrupoSanguineo(titular.getGrupoSanguineo());
+        
+        if (titular.getLicencia() != null) {
+            LicenciaDTO licenciaDTO = new LicenciaDTO();
+            licenciaDTO.setId(titular.getLicencia().getId());
+            licenciaDTO.setNumero(titular.getLicencia().getNroLicencia());
+            licenciaDTO.setObservaciones(titular.getLicencia().getObservaciones());
+            titularDTO.setLicencia(licenciaDTO);
+        }
+        
         return titularDTO;
     }
 
