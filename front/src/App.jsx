@@ -7,6 +7,7 @@ import LoginForm from './pages/LoginForm';
 import homeUsuario from "./pages/HomeUsuario.jsx";
 import homeAdministrador from "./pages/HomeAdministrador.jsx";
 import LicenseRegisterForm from './pages/LicenseRegisterForm.jsx';
+import Comprobante from './pages/Comprobante.jsx';
 import './App.css';
 
 
@@ -37,6 +38,7 @@ function App() {
                             <Route path="/homeUsuario" element={<homeUsuario />} />
                             <Route path="/homeAdministrador" element={<homeAdministrador />} />
                             <Route path="/emitir-licencia" element={<LicenseRegisterForm/>} />
+                            <Route path="/comprobante" element={<Comprobante/>} />
                         </Routes>
                     </main>
                 </div>

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const CLASES = [
   { value: 'A', label: 'Ciclomotores, motocicletas y triciclos motorizados.' },
@@ -38,7 +39,12 @@ const calcularEdad = (fechaNacimiento) => {
 };
 
 const LicenseRegisterForm = () => {
-  const usuarioAdmin = 'admin@municipalidad.com'; // ! Remplazar por contexto real si existe
+  const navigate = useNavigate();
+  const usuario = {
+    documento: '12345678', // ! Remplazar por contexto real si existe
+    nombre: 'Usuario Test', // ! Remplazar por contexto real si existe
+  };
+
   const [titular, setTitular] = useState(null);
   const [buscando, setBuscando] = useState(false);
   const [busquedaError, setBusquedaError] = useState('');
@@ -61,22 +67,21 @@ const LicenseRegisterForm = () => {
   }, [titular]);
 
   const calcularCosto = async () => {
-    console.log('Calculando costo...');
-    console.log('Titular:', titular);
-    console.log('Clases seleccionadas:', clasesSeleccionadas);
+    console.log('Calculando costo. Clases seleccionadas:', clasesSeleccionadas);
     if (!titular || clasesSeleccionadas.length === 0) {
       setCosto('');
       return;
     }
 
     try {
-      const res = await axios.get('http://localhost:8080/api/licencias/costo', {
-        params: {
-          tipodocumento: titular.tipodocumento,
-          documento: titular.documento,
-          clases: clasesSeleccionadas.map(c => c.value).join(',')
-        }
-      });
+      const params = {
+        clasesSeleccionadas: clasesSeleccionadas.map(c => c.value)
+      };
+      console.log('Request URL:', 'http://localhost:8080/api/licencias/costo');
+      console.log('Request params:', params);
+      
+      const res = await axios.get('http://localhost:8080/api/licencias/costo', { params });
+      console.log('Response:', res.data);
       setCosto(res.data.costo);
     } catch (error) {
       console.error('Error al calcular el costo:', error);
@@ -106,7 +111,36 @@ const LicenseRegisterForm = () => {
         setBusquedaError('No se encontró ningún titular');
       } else if (res.status === 200 && res.data) {
         console.log(res.data);
-        setTitular(res.data);
+        // TODO: Luego de implementar el backend, eliminar esta parte
+        // Agregar datos de prueba para la licencia
+        const titularConLicencia = {
+          ...res.data,
+          licencia: {
+            nroLicencia: "30400568",
+            observaciones: "Sin restricciones",
+            clasesLicencia: [
+              {
+                claseLicenciaEnum: "B",
+                fechaEmision: "2023-01-15",
+                fechaVencimiento: "2028-01-15",
+                usuarioEmisor: {
+                  nombre: "Juan Pérez",
+                  documento: "12345678"
+                }
+              },
+              {
+                claseLicenciaEnum: "A",
+                fechaEmision: "2023-01-15",
+                fechaVencimiento: "2028-01-15",
+                usuarioEmisor: {
+                  nombre: "Juan Pérez",
+                  documento: "12345678"
+                }
+              }
+            ]
+          }
+        };
+        setTitular(titularConLicencia);
       }
     } catch (error) {
       console.log(error);
@@ -138,6 +172,67 @@ const LicenseRegisterForm = () => {
   };
 
   const edadMinimaPorClase = (clase) => ['C', 'D', 'E'].includes(clase) ? 21 : 17;
+
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
+    setMessage({ type: '', text: '' });
+    if (!titular) {
+      setMessage({ type: 'error', text: 'Debe buscar y seleccionar un titular.' });
+      setSubmitting(false);
+      return;
+    }
+    if (clasesSeleccionadas.length === 0) {
+      setMessage({ type: 'error', text: 'Debe seleccionar al menos una clase.' });
+      setSubmitting(false);
+      return;
+    }
+
+    // Registrar licencia
+    try {
+      const requestData = {
+        clases: clasesSeleccionadas.map(c => { 
+          return { 
+            letraClase: c.value, 
+            usuarioEmisor: usuario.documento
+          };
+        }),
+        observaciones: values.observaciones,
+        titularId: titular.id
+      };
+      console.log("Request url:", 'http://localhost:8080/api/licencias');
+      console.log('Request data:', requestData);
+
+      const response = await axios.post('http://localhost:8080/api/licencias', requestData);
+      console.log('Response:', response.data);
+      
+      setMessage({ type: 'success', text: '¡Licencia registrada exitosamente!' });
+      resetForm();
+      setTitular(null);
+      setClasesSeleccionadas([]);
+      setCosto('');
+
+      
+    } catch (err) {
+      setMessage({ type: 'error', text: err.response?.data?.message || 'Error al registrar licencia.' });
+    } finally {
+      // Redireccinar a la página de comprobante
+      navigate('/comprobante', { 
+        state: { 
+          usuarioEmisor: usuario,
+          titular: titular,
+          clases: clasesSeleccionadas,
+          observaciones: values.observaciones,
+          costo: costo,
+          // TODO: Los siguientes datos deben ser obtenidos a través del backend:
+          nuevaLicencia: {
+            nroLicencia: "30400568",
+          },
+          fechaVencimiento: new Date(new Date().setFullYear(new Date().getFullYear() + 5)).toISOString().split('T')[0],
+          fechaEmision: new Date().toISOString().split('T')[0]
+        }
+      });
+      setSubmitting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -176,30 +271,61 @@ const LicenseRegisterForm = () => {
         {/* Datos del titular */}
         {titular && (
           <div className="bg-gray-50 p-3 rounded mb-4 border border-gray-200">
-            <div className="font-semibold">Titular:</div>
-            <div><span className="font-medium">Nombre:</span> {titular.nombre}</div>
-            <div><span className="font-medium">Fecha Nac.:</span> {titular.fechaNacimiento}</div>
-            <div><span className="font-medium">Dirección:</span> {titular.domicilio}</div>
-            <div><span className="font-medium">Grupo Sanguíneo:</span> {titular.grupoSanguineo}</div>
-            <div><span className="font-medium">Donante de órganos:</span> {titular.esDonanteOrganos ? 'Sí' : 'No'}</div>
-            {titular.licencias && titular.licencias.length > 0 && (
-              <div className="mt-2">
-                <div className="font-semibold">Licencias actuales:</div>
-                {titular.licencias.map((licencia, index) => (
-                  <div key={index} className="text-sm">
-                    {licencia.clases.map(clase => {
-                      const claseInfo = CLASES.find(c => c.value === clase);
-                      return (
-                        <div key={clase} className="ml-2">
-                          • {clase} - {claseInfo?.label}
-                        </div>
-                      );
-                    })}
-                    <div className="ml-2 text-gray-600">Vence: {licencia.fechaVencimiento}</div>
-                  </div>
-                ))}
+            <div className="space-y-4">
+              {/* Información Personal */}
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-2">Información Personal</h3>
+                <div className="grid grid-cols-2 gap-2 text-sm">
+                  <div><span className="font-medium">Nombre:</span> {titular.nombre}</div>
+                  <div><span className="font-medium">Fecha Nac.:</span> {titular.fechaNacimiento}</div>
+                  <div><span className="font-medium">Dirección:</span> {titular.domicilio}</div>
+                  <div><span className="font-medium">Grupo Sanguíneo:</span> {titular.grupoSanguineo}</div>
+                  <div><span className="font-medium">Donante de órganos:</span> {titular.esDonanteOrganos ? 'Sí' : 'No'}</div>
+                </div>
               </div>
-            )}
+
+              {/* Licencias Actuales */}
+              {titular.licencia && titular.licencia !== null && (
+                <div>
+                  <h3 className="font-semibold text-gray-900 mb-2">Licencias Actuales</h3>
+                  <div className="space-y-3">
+                    <div className="bg-white p-3 rounded-md border border-gray-200">
+                      <div className="grid grid-cols-2 gap-2 text-sm mb-2">
+                        <div><span className="font-medium">Nro. Licencia:</span> {titular.licencia.nroLicencia}</div>
+                        <div><span className="font-medium">Observaciones:</span> {titular.licencia.observaciones || 'Sin observaciones'}</div>
+                      </div>
+                      
+                      {/* Clases de la Licencia */}
+                      {titular.licencia.clasesLicencia && titular.licencia.clasesLicencia.length > 0 && (
+                        <div className="mt-2">
+                          <h4 className="text-sm font-medium text-gray-700 mb-1">Clases Habilitadas:</h4>
+                          <div className="space-y-1">
+                            {titular.licencia.clasesLicencia.map((clase, idx) => (
+                              <div key={idx} className="ml-2 text-sm">
+                                <div className="flex items-center justify-between">
+                                  <span>• {clase.claseLicenciaEnum} - {CLASES.find(c => c.value === clase.claseLicenciaEnum)?.label}</span>
+                                  <span className="text-gray-500 text-xs">
+                                    Emitida: {new Date(clase.fechaEmision).toLocaleDateString()}
+                                  </span>
+                                </div>
+                                <div className="ml-4 text-xs text-gray-500">
+                                  Vence: {new Date(clase.fechaVencimiento).toLocaleDateString()}
+                                  {clase.usuarioEmisor && (
+                                    <span className="ml-2">
+                                      • Emitida por: {clase.usuarioEmisor.nombre}
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )}
 
@@ -211,68 +337,7 @@ const LicenseRegisterForm = () => {
             observaciones: '',
           }}
           validationSchema={validationSchema}
-          onSubmit={async (values, { setSubmitting, resetForm }) => {
-            setMessage({ type: '', text: '' });
-            if (!titular) {
-              setMessage({ type: 'error', text: 'Debe buscar y seleccionar un titular.' });
-              setSubmitting(false);
-              return;
-            }
-            if (clasesSeleccionadas.length === 0) {
-              setMessage({ type: 'error', text: 'Debe seleccionar al menos una clase.' });
-              setSubmitting(false);
-              return;
-            }
-
-            // Validación de edad mínima para cada clase
-            const edad = calcularEdad(titular.fechaNacimiento);
-            for (const clase of clasesSeleccionadas) {
-              const edadMin = edadMinimaPorClase(clase.value);
-              if (edad < edadMin) {
-                setMessage({ type: 'error', text: `El titular debe tener al menos ${edadMin} años para la clase ${clase.value}.` });
-                setSubmitting(false);
-                return;
-              }
-            }
-
-            // Validación profesional
-            const tieneClaseProfesional = clasesSeleccionadas.some(c => ['C', 'D', 'E'].includes(c.value));
-            if (tieneClaseProfesional) {
-              if (!profesionalOk) {
-                setMessage({ type: 'error', text: profesionalError || 'No cumple requisitos para licencia profesional.' });
-                setSubmitting(false);
-                return;
-              }
-              if (edad > 65) {
-                setMessage({ type: 'error', text: 'No puede otorgarse licencia profesional por primera vez a mayores de 65 años.' });
-                setSubmitting(false);
-                return;
-              }
-            }
-
-            // Registrar licencia
-            try {
-              await axios.post('http://localhost:8080/api/licencias', {
-                clases: clasesSeleccionadas.map(c => c.value),
-                observaciones: values.observaciones,
-                titular: {
-                  tipodocumento: titular.tipodocumento,
-                  documento: titular.documento,
-                },
-                usuarioAdmin,
-                fechaTramite: new Date().toISOString().split('T')[0],
-              });
-              setMessage({ type: 'success', text: '¡Licencia registrada exitosamente!' });
-              resetForm();
-              setTitular(null);
-              setClasesSeleccionadas([]);
-              setCosto('');
-            } catch (err) {
-              setMessage({ type: 'error', text: err.response?.data?.message || 'Error al registrar licencia.' });
-            } finally {
-              setSubmitting(false);
-            }
-          }}
+          onSubmit={handleSubmit}
         >
           {({ values, isSubmitting, setFieldValue }) => (
             <Form className="space-y-4">
@@ -292,7 +357,7 @@ const LicenseRegisterForm = () => {
                       setFieldValue('clase', '');
                     }}
                     disabled={!values.clase}
-                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                    className="px-4 pispoy-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
                   >
                     Agregar
                   </button>
