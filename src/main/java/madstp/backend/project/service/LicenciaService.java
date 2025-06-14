@@ -63,15 +63,8 @@ public class LicenciaService {
         create_validate(licenciaDTO, edad, fechaNacimiento);
 
         // Calcular vigencia de la Licencia
-        LocalDate fechaInicioVigencia = LocalDate.now();
-        int vigenciaAnios = calcularVigenciaLicencia(edad, fechaInicioVigencia, fechaNacimiento, licenciaDTO);
-        LocalDate fechaVencimiento = fechaInicioVigencia
-            .plusYears(vigenciaAnios)
-            .withMonth(fechaNacimiento.getMonthValue())
-            .withDayOfMonth(fechaNacimiento.getDayOfMonth());
-        if (!fechaVencimiento.isAfter(fechaInicioVigencia)) {
-            fechaVencimiento = fechaVencimiento.plusYears(1);
-        }
+        LocalDate fechaInicioVigencia = LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires"));
+        LocalDate fechaVencimiento = calcularVigenciaLicencia(titular.getId(), titularService, claseLicenciaService);
 
         // Setear fechas en cada clase a incorporar
         List<ClaseLicenciaDTO> clasesAIncorporar = licenciaDTO.getClases();
@@ -259,12 +252,15 @@ public class LicenciaService {
 
     private Integer obtenerCostoLicencia(LicenciaDTO licenciaDTO) {
         // TODO: Implementar lógica real acá o en la clase que corresponda. Modificar firma del  método en caso de ser necesario.
+
         TitularDTO titular = titularService.get(licenciaDTO.getTitularId());
         LocalDate fechaNacimiento = titular.getFechaNacimiento();
         int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
         LocalDate fechaInicioVigencia = LocalDate.now();
 
-        int vigenciaAnios = calcularVigenciaLicencia(edad, fechaInicioVigencia, fechaNacimiento, licenciaDTO);
+        LocalDate fechaVencimiento = calcularVigenciaLicencia(titular.getId(),titularService,claseLicenciaService);
+
+        int vigenciaAnios = Period.between(LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")), fechaVencimiento).getYears();
 
         List<ClaseLicenciaEnum> listaClaseLicenciaEnum = licenciaDTO.getClases()
                 .stream()
@@ -294,9 +290,7 @@ public class LicenciaService {
                                 .collect(Collectors.toList());
 
         licenciaDTO.setClases(clasesDTO);
-
         licenciaDTO.setObservaciones(licencia.getObservaciones());
-        licenciaDTO.setNumeroDocumento(licencia.getNroLicencia());
         return licenciaDTO;
     }
 

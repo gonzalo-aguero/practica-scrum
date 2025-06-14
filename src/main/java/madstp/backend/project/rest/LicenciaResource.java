@@ -38,6 +38,11 @@ public class LicenciaResource {
         return ResponseEntity.ok(licenciaService.get(id));
     }
 
+    @GetMapping("/costo")
+    public ResponseEntity<List<LicenciaDTO>> calcularCosto() {
+
+    }
+
     @PostMapping
     @ApiResponse(responseCode = "201")
     public ResponseEntity<Long> createLicencia(@RequestBody @Valid final LicenciaDTO licenciaDTO) {

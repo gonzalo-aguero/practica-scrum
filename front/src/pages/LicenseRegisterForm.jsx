@@ -113,6 +113,8 @@ const LicenseRegisterForm = () => {
         console.log(res.data);
         // TODO: Luego de implementar el backend, eliminar esta parte
         // Agregar datos de prueba para la licencia
+
+        // const titularConLicencia = res.data
         const titularConLicencia = {
           ...res.data,
           licencia: {

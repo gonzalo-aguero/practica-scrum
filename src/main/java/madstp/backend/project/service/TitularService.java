@@ -69,7 +69,6 @@ public class TitularService {
         if (titular.getLicencia() != null) {
             LicenciaDTO licenciaDTO = new LicenciaDTO();
             licenciaDTO.setId(titular.getLicencia().getId());
-            licenciaDTO.setNumeroDocumento(titular.getLicencia().getNroLicencia());
             licenciaDTO.setObservaciones(titular.getLicencia().getObservaciones());
             titularDTO.setLicencia(licenciaDTO);
         }
