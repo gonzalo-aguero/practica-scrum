@@ -42,8 +42,8 @@ public class ClaseLicencia {
     LocalDate fechaVencimiento;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_responsable_id")
-    Usuario usuarioResponsable;
+    @JoinColumn(name = "documento_usuario_emisor", referencedColumnName = "documento", nullable = false)
+    private Usuario usuarioEmisor;
 }
 
 /*

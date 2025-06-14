@@ -1,44 +1,29 @@
 package madstp.backend.project.dto;
 
+import madstp.backend.project.dto.ClaseLicenciaDTO;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import madstp.backend.project.enums.GrupoSanguineoEnum;
-import madstp.backend.project.enums.TipoDocumentoEnum;
-
 import java.time.LocalDate;
+import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
 
+
+@Getter
+@Setter
 public class LicenciaDTO {
 
-    private long id;
+    private Long id;
+
+    @NotNull
+    private List<ClaseLicenciaDTO> clases;
 
     @NotNull
     @Size(max = 255)
-    private String nombre;
-
-    @NotNull
-    @Size(max = 255)
-    private String apellido;
-
-    @NotNull
-    @Size(max = 255)
-    private String cuil;
-
-    @NotNull
-    @Size(max = 255)
-    private String direccion;
-
-    @NotNull
-    @Size(max = 255)
-    private String nroLicencia;
-
-    @NotNull
-    @Size(max = 255)
-    private LocalDate fechaNacimiento;
-
-    @NotNull
-    private GrupoSanguineoEnum grupoSanguineo;
-
-    private Boolean esDonanteOrganos;
-
     private String observaciones;
+
+    @NotNull
+    @Size(max = 255)
+    private String numero;
+
 }

@@ -17,6 +17,6 @@ public class Titular extends Persona {
     private Boolean esDonanteOrganos;
 
     @Column(nullable = false)
-    GrupoSanguineoEnum grupoSanguineo;
+    private GrupoSanguineoEnum grupoSanguineo;
 
 }
