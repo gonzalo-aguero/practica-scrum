@@ -75,7 +75,8 @@ const LicenseRegisterForm = () => {
 
     try {
       const params = {
-        clasesSeleccionadas: clasesSeleccionadas.map(c => c.value)
+        clasesSeleccionadas: clasesSeleccionadas.map(c => c.value),
+        idTitular: titular.ID
       };
       console.log('Request URL:', 'http://localhost:8080/api/licencias/costo');
       console.log('Request params:', params);
@@ -114,7 +115,7 @@ const LicenseRegisterForm = () => {
         // TODO: Luego de implementar el backend, eliminar esta parte
         // Agregar datos de prueba para la licencia
 
-        // const titularConLicencia = res.data
+        // const titularConLicencia = res.data  TENDRIA QUE IR ESTE PARA QUE ANDE
         const titularConLicencia = {
           ...res.data,
           licencia: {

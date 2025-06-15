@@ -250,22 +250,16 @@ public class LicenciaService {
         return costo;
     }
 
-    private Integer obtenerCostoLicencia(LicenciaDTO licenciaDTO) {
-        // TODO: Implementar lógica real acá o en la clase que corresponda. Modificar firma del  método en caso de ser necesario.
+    public Integer obtenerCostoLicencia(List<String> clasesSeleccionadasStr, Long idTitular) {
+        // Convertir strings a enums
+        List<ClaseLicenciaEnum> listaClaseLicenciaEnum = clasesSeleccionadasStr.stream()
+                .map(String::toUpperCase)
+                .map(ClaseLicenciaEnum::valueOf)
+                .toList();
 
-        TitularDTO titular = titularService.get(licenciaDTO.getTitularId());
-        LocalDate fechaNacimiento = titular.getFechaNacimiento();
-        int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
-        LocalDate fechaInicioVigencia = LocalDate.now();
-
-        LocalDate fechaVencimiento = calcularVigenciaLicencia(titular.getId(),titularService,claseLicenciaService);
+        LocalDate fechaVencimiento = calcularVigenciaLicencia(idTitular, titularService, claseLicenciaService);
 
         int vigenciaAnios = Period.between(LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")), fechaVencimiento).getYears();
-
-        List<ClaseLicenciaEnum> listaClaseLicenciaEnum = licenciaDTO.getClases()
-                .stream()
-                .map(ClaseLicenciaDTO::getClaseLicenciaEnum)
-                .collect(Collectors.toList());
 
         return calcularCostoLicencia(vigenciaAnios, listaClaseLicenciaEnum);
     }
