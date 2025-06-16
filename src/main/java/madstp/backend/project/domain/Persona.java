@@ -47,9 +47,6 @@ public abstract class Persona {
     @Column(nullable = false)
     private TipoDocumentoEnum tipoDocumento;
 
-    @Column(nullable=false)
-    private String cuil;
-
     @Column(nullable = false)
     private String domicilio;
 
