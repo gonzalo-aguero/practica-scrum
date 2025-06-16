@@ -278,6 +278,7 @@ public class LicenciaService {
     private LicenciaDTO mapToDTO(final Licencia licencia, final LicenciaDTO licenciaDTO) {
 
         licenciaDTO.setId(licencia.getId());
+        licenciaDTO.setNroLicencia(licencia.getNroLicencia());
 
         List<ClaseLicenciaDTO> clasesDTO = licencia.getClasesLicencia().stream()
                         .map(clase -> claseLicenciaService.mapToDTO(clase, new ClaseLicenciaDTO()))

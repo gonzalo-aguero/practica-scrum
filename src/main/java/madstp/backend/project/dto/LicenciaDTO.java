@@ -14,6 +14,8 @@ public class LicenciaDTO {
 
     private Long id;
 
+    private String nroLicencia;
+
     @NotNull
     private List<ClaseLicenciaDTO> clases;
 

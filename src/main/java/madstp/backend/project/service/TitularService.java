@@ -1,7 +1,10 @@
 package madstp.backend.project.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
 import madstp.backend.project.domain.Titular;
+import madstp.backend.project.dto.ClaseLicenciaDTO;
 import madstp.backend.project.dto.TitularDTO;
 import madstp.backend.project.dto.LicenciaDTO;
 import madstp.backend.project.enums.TipoDocumentoEnum;
@@ -69,10 +72,31 @@ public class TitularService {
         if (titular.getLicencia() != null) {
             LicenciaDTO licenciaDTO = new LicenciaDTO();
             licenciaDTO.setId(titular.getLicencia().getId());
+            licenciaDTO.setNroLicencia(titular.getLicencia().getNroLicencia());
             licenciaDTO.setObservaciones(titular.getLicencia().getObservaciones());
+            licenciaDTO.setTitularId(titular.getLicencia().getTitular().getId());
+        
+            // Mapear las clases de licencia
+            if (titular.getLicencia().getClasesLicencia() != null) {
+                List<ClaseLicenciaDTO> clasesDTO = titular.getLicencia().getClasesLicencia()
+                    .stream()
+                    .map(clase -> {
+                        ClaseLicenciaDTO claseDTO = new ClaseLicenciaDTO();
+                        claseDTO.setLicenciaId(clase.getId());
+                        claseDTO.setClaseLicenciaEnum(clase.getClaseLicenciaEnum());
+                        claseDTO.setFechaEmision(clase.getFechaEmision());
+                        claseDTO.setFechaVencimiento(clase.getFechaVencimiento());
+                        claseDTO.setUsuarioEmisor(clase.getUsuarioEmisor() == null ? null : clase.getUsuarioEmisor().getId());
+                        return claseDTO;
+                    })
+                    .collect(Collectors.toList());
+                
+                licenciaDTO.setClases(clasesDTO);
+            }
+        
             titularDTO.setLicencia(licenciaDTO);
         }
-        
+    
         return titularDTO;
     }
 

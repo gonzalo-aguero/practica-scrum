@@ -42,7 +42,7 @@ const LicenseRegisterForm = () => {
   const navigate = useNavigate();
   const usuario = {
     documento: '12345678', // ! Remplazar por contexto real si existe
-    nombre: 'Usuario Test', // ! Remplazar por contexto real si existe
+    nombre: 'Usuario Municipal (test)', // ! Remplazar por contexto real si existe
   };
 
   const [titular, setTitular] = useState(null);
@@ -57,8 +57,8 @@ const LicenseRegisterForm = () => {
 
   // Actualizar clases disponibles cuando se carga el titular
   useEffect(() => {
-    if (titular?.licencias) {
-      const clasesAsignadas = titular.licencias.flatMap(l => l.clases);
+    if (titular?.licencia?.clases) {
+      const clasesAsignadas = titular.licencia.clases.map(l => l.claseLicenciaEnum);
       const nuevasClasesDisponibles = CLASES.filter(c => !clasesAsignadas.includes(c.value));
       setClasesDisponibles(nuevasClasesDisponibles);
     } else {
@@ -74,14 +74,13 @@ const LicenseRegisterForm = () => {
     }
 
     try {
-      const params = {
-        clasesSeleccionadas: clasesSeleccionadas.map(c => c.value),
-        idTitular: titular.ID
-      };
-      console.log('Request URL:', 'http://localhost:8080/api/licencias/costo');
-      console.log('Request params:', params);
-      
-      const res = await axios.get('http://localhost:8080/api/licencias/costo', { params });
+      const params = new URLSearchParams();
+      clasesSeleccionadas.map(c => c.value).forEach(clase => {
+        params.append('clasesSeleccionadas', clase);
+      });
+      params.append('idTitular', titular.id);
+      const res = await axios.get(`http://localhost:8080/api/licencias/costo?${params.toString()}`);
+
       console.log('Response:', res.data);
       setCosto(res.data.costo);
     } catch (error) {
@@ -111,39 +110,8 @@ const LicenseRegisterForm = () => {
       if (res.status === 204) {
         setBusquedaError('No se encontró ningún titular');
       } else if (res.status === 200 && res.data) {
-        console.log(res.data);
-        // TODO: Luego de implementar el backend, eliminar esta parte
-        // Agregar datos de prueba para la licencia
-
-        // const titularConLicencia = res.data  TENDRIA QUE IR ESTE PARA QUE ANDE
-        const titularConLicencia = {
-          ...res.data,
-          licencia: {
-            nroLicencia: "30400568",
-            observaciones: "Sin restricciones",
-            clasesLicencia: [
-              {
-                claseLicenciaEnum: "B",
-                fechaEmision: "2023-01-15",
-                fechaVencimiento: "2028-01-15",
-                usuarioEmisor: {
-                  nombre: "Juan Pérez",
-                  documento: "12345678"
-                }
-              },
-              {
-                claseLicenciaEnum: "A",
-                fechaEmision: "2023-01-15",
-                fechaVencimiento: "2028-01-15",
-                usuarioEmisor: {
-                  nombre: "Juan Pérez",
-                  documento: "12345678"
-                }
-              }
-            ]
-          }
-        };
-        setTitular(titularConLicencia);
+        setTitular(res.data);
+        console.log(titular);
       }
     } catch (error) {
       console.log(error);
@@ -217,6 +185,7 @@ const LicenseRegisterForm = () => {
     } catch (err) {
       setMessage({ type: 'error', text: err.response?.data?.message || 'Error al registrar licencia.' });
     } finally {
+      // TODO: Temporalmente se redirecciona siempre. Una vez terminado el back para cargar licencia se hace solo al tener exito.
       // Redireccinar a la página de comprobante
       navigate('/comprobante', { 
         state: { 
@@ -225,10 +194,7 @@ const LicenseRegisterForm = () => {
           clases: clasesSeleccionadas,
           observaciones: values.observaciones,
           costo: costo,
-          // TODO: Los siguientes datos deben ser obtenidos a través del backend:
-          nuevaLicencia: {
-            nroLicencia: "30400568",
-          },
+          nuevaLicencia: titular.licencia,
           fechaVencimiento: new Date(new Date().setFullYear(new Date().getFullYear() + 5)).toISOString().split('T')[0],
           fechaEmision: new Date().toISOString().split('T')[0]
         }
@@ -280,7 +246,7 @@ const LicenseRegisterForm = () => {
                 <h3 className="font-semibold text-gray-900 mb-2">Información Personal</h3>
                 <div className="grid grid-cols-2 gap-2 text-sm">
                   <div><span className="font-medium">Nombre:</span> {titular.nombre}</div>
-                  <div><span className="font-medium">Fecha Nac.:</span> {titular.fechaNacimiento}</div>
+                  <div><span className="font-medium">Fecha Nac.:</span> {new Date(titular.fechaNacimiento).toLocaleDateString()}</div>
                   <div><span className="font-medium">Dirección:</span> {titular.domicilio}</div>
                   <div><span className="font-medium">Grupo Sanguíneo:</span> {titular.grupoSanguineo}</div>
                   <div><span className="font-medium">Donante de órganos:</span> {titular.esDonanteOrganos ? 'Sí' : 'No'}</div>
@@ -299,11 +265,11 @@ const LicenseRegisterForm = () => {
                       </div>
                       
                       {/* Clases de la Licencia */}
-                      {titular.licencia.clasesLicencia && titular.licencia.clasesLicencia.length > 0 && (
+                      {titular.licencia.clases && titular.licencia.clases.length > 0 && (
                         <div className="mt-2">
                           <h4 className="text-sm font-medium text-gray-700 mb-1">Clases Habilitadas:</h4>
                           <div className="space-y-1">
-                            {titular.licencia.clasesLicencia.map((clase, idx) => (
+                            {titular.licencia.clases.map((clase, idx) => (
                               <div key={idx} className="ml-2 text-sm">
                                 <div className="flex items-center justify-between">
                                   <span>• {clase.claseLicenciaEnum} - {CLASES.find(c => c.value === clase.claseLicenciaEnum)?.label}</span>
@@ -398,7 +364,7 @@ const LicenseRegisterForm = () => {
               {/* Costo de emitir Licencia */}
               <div className="flex gap-4">
                 <div className="flex-1">
-                  <span className="block text-xs text-gray-500">Costo</span>
+                  <span className="block text-xs text-gray-500">Costo total</span>
                   <span className="font-semibold">{costo ? `$${costo}` : '-'}</span>
                 </div>
               </div>
@@ -432,4 +398,4 @@ const LicenseRegisterForm = () => {
   );
 };
 
-export default LicenseRegisterForm; 
+export default LicenseRegisterForm;
