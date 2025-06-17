@@ -17,6 +17,8 @@ function Header() {
             case '/homeAdministrador':
                 setHeaderState({ tipo: 'admin' });
                 break;
+            case '/buscar-titular':
+            case '/emitir-licencia':
             case '/alta-titular':
             case '/homeUsuario':
                 setHeaderState({ tipo: 'usuario' });
@@ -61,6 +63,10 @@ function Header() {
                             className={normalButtonStyle}
                         >
                             Inicio
+                        </Link>
+                        <Link to="/buscar-titular"
+                              className={normalButtonStyle}>
+                            Buscar Titular
                         </Link>
                         <Link
                             to="/alta-titular"

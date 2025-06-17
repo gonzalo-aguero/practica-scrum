@@ -8,6 +8,7 @@ import homeUsuario from "./pages/HomeUsuario.jsx";
 import homeAdministrador from "./pages/HomeAdministrador.jsx";
 import LicenseRegisterForm from './pages/LicenseRegisterForm.jsx';
 import Comprobante from './pages/Comprobante.jsx';
+import BuscarTitular from './pages/BuscarTitular.jsx';
 import './App.css';
 
 
@@ -39,6 +40,7 @@ function App() {
                             <Route path="/homeAdministrador" element={<homeAdministrador />} />
                             <Route path="/emitir-licencia" element={<LicenseRegisterForm/>} />
                             <Route path="/comprobante" element={<Comprobante/>} />
+                            <Route path="/buscar-titular" element={<BuscarTitular/>} />
                         </Routes>
                     </main>
                 </div>
