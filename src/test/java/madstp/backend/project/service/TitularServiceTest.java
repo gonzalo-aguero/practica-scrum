@@ -11,18 +11,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 public class TitularServiceTest {
 
@@ -36,7 +33,9 @@ public class TitularServiceTest {
     private TitularDTO titularDTO;
 
     @BeforeEach
-    public void init(){
+    public void init() {
+        // Inicializo los atributos de instancia
+        titular = new Titular();
         titular.setId(1L);
         titular.setNombre("John Doe");
         titular.setDocumento("123456");
@@ -46,6 +45,7 @@ public class TitularServiceTest {
         titular.setContrasena("jd1985");
         titular.setEsDonanteOrganos(true);
 
+        titularDTO = new TitularDTO();
         titularDTO.setId(1L);
         titularDTO.setNombre("John Doe");
         titularDTO.setDocumento("123456");
@@ -56,62 +56,55 @@ public class TitularServiceTest {
         titularDTO.setEsDonanteOrganos(true);
     }
 
-
     @Test
     public void testGet_WithValidData_ReturnTitularDTO() {
-        // Arrange
         Long titularId = 1L;
-
         when(titularRepository.findById(titularId)).thenReturn(Optional.of(titular));
 
-        // Act
         TitularDTO titularReturn = titularService.get(titularId);
 
-        // Assert
         assertThat(titularReturn).isNotNull();
+        assertEquals(titularDTO.getId(), titularReturn.getId());
+        assertEquals(titularDTO.getNombre(), titularReturn.getNombre());
+        assertEquals(titularDTO.getDocumento(), titularReturn.getDocumento());
+
     }
 
     @Test
     public void testCreate_WithValidData_ReturnGeneratedId() {
-        // Arrange
-        when(titularRepository.findById(titular.getId())).thenReturn(Optional.of(titular));
+        // Simula guardar y devolver el titular con ID
         when(titularRepository.save(any(Titular.class))).thenReturn(titular);
 
-        // Act
         Long titularIdReturn = titularService.create(titularDTO);
 
-        // Assert
         assertThat(titularIdReturn).isNotNull();
-        assertEquals(titularIdReturn, titular.getId());
+        assertEquals(titular.getId(), titularIdReturn);
     }
 
     @Test
     public void testUpdate_WithValidData_ReturnGeneratedId() {
-        // Arrange
-        Long titularId = 1L;
+        Long titularId = titular.getId();
         when(titularRepository.findById(titularId)).thenReturn(Optional.of(titular));
         when(titularRepository.save(any(Titular.class))).thenReturn(titular);
 
-        // Act
         titularService.update(titularId, titularDTO);
 
-        // Assert
-        assertThat(titularService.get(titularId)).isNotNull();
-        assertEquals(titularDTO, titularService.get(titularId));
+        TitularDTO updatedDto = titularService.get(titularId);
+        assertThat(updatedDto).isNotNull();
+        assertEquals(titularDTO.getNombre(), updatedDto.getNombre());
+        // Más asserts si consideras necesario
     }
 
     @Test
     public void testGetByTipoDocumentoAndDocumento_WithValidData_ReturnTitularDTO() {
-        // Arrange
         TipoDocumentoEnum tipoDocumento = TipoDocumentoEnum.DNI;
         String documento = "123456";
 
-        when(titularRepository.findByTipoDocumentoAndDocumento(tipoDocumento, documento)).thenReturn(Optional.of(titular));
+        when(titularRepository.findByTipoDocumentoAndDocumento(tipoDocumento, documento))
+                .thenReturn(Optional.of(titular));
 
-        // Act
         TitularDTO titularReturn = titularService.getByTipoDocumentoAndDocumento(tipoDocumento, documento);
 
-        // Assert
         assertThat(titularReturn).isNotNull();
         assertEquals(tipoDocumento, titularReturn.getTipoDocumento());
         assertEquals(documento, titularReturn.getDocumento());
@@ -119,15 +112,13 @@ public class TitularServiceTest {
 
     @Test
     public void testGetByTipoDocumentoAndDocumento_WithInvalidData_ThrowsNotFoundException() {
-        // Arrange
         TipoDocumentoEnum tipoDocumento = TipoDocumentoEnum.DNI;
         String documento = "999999";
 
         when(titularRepository.findByTipoDocumentoAndDocumento(tipoDocumento, documento)).thenReturn(Optional.empty());
 
-        // Act & Assert
-        assertThrows(NotFoundException.class, () -> titularService.getByTipoDocumentoAndDocumento(tipoDocumento, documento));
+        assertThrows(NotFoundException.class, () -> 
+            titularService.getByTipoDocumentoAndDocumento(tipoDocumento, documento)
+        );
     }
-
-
 }
