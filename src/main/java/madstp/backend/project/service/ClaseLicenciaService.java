@@ -77,9 +77,12 @@ public class ClaseLicenciaService {
         claseLicencia.setClaseLicenciaEnum(claseLicenciaDTO.getClaseLicenciaEnum());
         claseLicencia.setFechaEmision(claseLicenciaDTO.getFechaEmision());
         claseLicencia.setFechaVencimiento(claseLicenciaDTO.getFechaVencimiento());
-        final Usuario usuarioEmisor = claseLicenciaDTO.getUsuarioEmisor() == null ? null : usuarioRepository.findById(claseLicenciaDTO.getUsuarioEmisor())
-                .orElseThrow(() -> new NotFoundException("usuarioEmisor not found"));
-        claseLicencia.setUsuarioEmisor(usuarioEmisor);
+        if (usuarioRepository.findById(claseLicenciaDTO.getUsuarioEmisor()).isPresent()) {
+            usuarioRepository.findById(claseLicenciaDTO.getUsuarioEmisor()).get();
+        }
+        //final Usuario usuarioEmisor = claseLicenciaDTO.getUsuarioEmisor() == null ? null : usuarioRepository.findById(claseLicenciaDTO.getUsuarioEmisor())
+                //.orElseThrow(() -> new NotFoundException("usuarioEmisor not found"));
+        //claseLicencia.setUsuarioEmisor(usuarioEmisor);
         return claseLicencia;
     }
 

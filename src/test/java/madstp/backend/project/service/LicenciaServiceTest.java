@@ -1,5 +1,6 @@
 package madstp.backend.project.service;
 
+import madstp.backend.project.domain.ClaseLicencia;
 import madstp.backend.project.domain.Licencia;
 import madstp.backend.project.dto.ClaseLicenciaDTO;
 import madstp.backend.project.dto.LicenciaDTO;
@@ -14,9 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Sort;
 
 import java.time.LocalDate;
@@ -27,8 +26,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(MockitoExtension.class) // Solo esto, sin @SpringBootTest
 class LicenciaServiceTest {
 
     @Mock
@@ -47,8 +45,6 @@ class LicenciaServiceTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
-
         licencia = new Licencia();
         licencia.setId(1L);
         licencia.setNroLicencia("12345678");
@@ -68,15 +64,13 @@ class LicenciaServiceTest {
         titularDTO.setFechaNacimiento(LocalDate.of(1990, 1, 1));
     }
 
-    // ----------------------- FIND ALL Y GET -----------------------
-
     @Test
     void cuandoBuscarTodasLasLicencias_devuelveLista() {
-        when(licenciaRepository.findAll(any(Sort.class))).thenReturn(List.of(licencia));
+        when(licenciaRepository.findAll()).thenReturn(List.of(licencia));
         List<LicenciaDTO> result = licenciaService.findAll();
         assertThat(result).isNotNull();
         assertThat(result).hasSize(1);
-        verify(licenciaRepository).findAll(any(Sort.class));
+        verify(licenciaRepository).findAll();
     }
 
     @Test
@@ -103,6 +97,16 @@ class LicenciaServiceTest {
         ClaseLicenciaDTO claseDTO = new ClaseLicenciaDTO();
         claseDTO.setClaseLicenciaEnum(ClaseLicenciaEnum.B);
         licenciaDTO.setClases(List.of(claseDTO));
+
+        when(claseLicenciaService.mapToEntity(any(ClaseLicenciaDTO.class), any(ClaseLicencia.class)))
+        .thenAnswer(invocation -> {
+            ClaseLicenciaDTO claseLicenciaDTO = invocation.getArgument(0);
+            ClaseLicencia claseLicencia = invocation.getArgument(1);
+            claseLicencia.setClaseLicenciaEnum(claseLicenciaDTO.getClaseLicenciaEnum());
+            claseLicencia.setFechaEmision(claseLicenciaDTO.getFechaEmision());
+            claseLicencia.setFechaVencimiento(claseLicenciaDTO.getFechaVencimiento());
+            return claseLicencia;
+        });
 
         when(licenciaRepository.save(any(Licencia.class))).thenAnswer(invocation -> {
             Licencia lic = invocation.getArgument(0);

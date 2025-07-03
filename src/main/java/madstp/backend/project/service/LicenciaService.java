@@ -35,10 +35,16 @@ public class LicenciaService {
     }
 
     public List<LicenciaDTO> findAll() {
-        final List<Licencia> licencias = licenciaRepository.findAll(Sort.by("id"));
-        return licencias.stream()
+        final List<Licencia> licencias = licenciaRepository.findAll();
+        System.out.println("P1 " + licencias);
+
+        List<LicenciaDTO> licenciaDTOs = licencias.stream()
                 .map(licencia -> mapToDTO(licencia, new LicenciaDTO()))
                 .toList();
+
+        System.out.println(licenciaDTOs);
+
+        return licenciaDTOs;
     }
 
     public LicenciaDTO get(final Long id) {
@@ -292,9 +298,10 @@ public class LicenciaService {
     private Licencia mapToEntity(final LicenciaDTO licenciaDTO, final Licencia licencia) {
 
         List<ClaseLicencia> clases = licenciaDTO.getClases().stream()
-                .map(dto -> claseLicenciaService.mapToEntity(dto, new ClaseLicencia()))
-                .peek(clase -> clase.setLicencia(licencia)) // muy importante para mantener la relación bidireccional
+                .map(dto -> claseLicenciaService.mapToEntity(dto, new ClaseLicencia()))// muy importante para mantener la relación bidireccional
                 .toList();
+
+        System.out.println(clases);
 
         licencia.setClasesLicencia(clases);
 
