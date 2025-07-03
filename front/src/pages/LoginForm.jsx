@@ -55,14 +55,12 @@ const LoginForm = () => {
             if (documento === 'admin' && contrasena === 'admin12345_') {
                 setHeaderState({ tipo: 'admin'});
                 navigate('/homeAdministrador');
-                alert('Login exitoso');
                 return;
             }
 
             if (documento === 'user' && contrasena === 'user12345_') {
                 setHeaderState({ tipo: 'user'});
                 navigate('/homeUsuario');
-                alert('Login exitoso');
                 return;
             }
 
@@ -70,7 +68,6 @@ const LoginForm = () => {
             console.log(esAdministrador);
             if (esAdministrador) {
                 navigate('/homeAdministrador');
-                alert('Login exitoso');
                 return;
             }
 
@@ -78,7 +75,6 @@ const LoginForm = () => {
             console.log(esUsuario);
             if (esUsuario) {
                 navigate('/homeUsuario');
-                alert('Login exitoso');
                 return;
             }
 

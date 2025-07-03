@@ -20,6 +20,10 @@ public class UsuarioDTO {
 
     @NotNull
     @Size(max = 255)
+    private String apellido;
+
+    @NotNull
+    @Size(max = 255)
     @UsuarioDocumentoUnique
     private String documento;
 

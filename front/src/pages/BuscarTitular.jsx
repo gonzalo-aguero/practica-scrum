@@ -20,13 +20,14 @@ const TablaTitulares = () => {
         const fetchTitulares = async () => {
             try {
                 const titularesData = await findAllTitulares(); // Llama a la función
-                setTitulares(titularesData); // Almacena los titulares en el estado
+                setTitulares(titularesData);// Almacena los titulares en el estado
+                console.log('Titulares: ', titularesData);
             } catch (err) {
                 setError('Hubo un error al cargar los titulares.');
             }
         }
         fetchTitulares();
-    })
+    }, []);
 
 
     const personas = [
@@ -43,26 +44,32 @@ const TablaTitulares = () => {
             {titulares.length > 0 ? ( <table
                 className="table-auto border-collapse border border-gray-400 w-full text-left">
                 <thead>
-                <th className="border border-gray-400 px-4 py-2"
-                >Tipo Documento</th>
-                <th className="border border-gray-400 px-4 py-2"
-                >Documento</th>
-                <th className="border border-gray-400 px-4 py-2"
-                >Nombre</th>
-                <th className="border border-gray-400 px-4 py-2"
-                >Apellido</th>
+                <tr>
+                    <th className="border border-gray-400 px-4 py-2"
+                    >Tipo Documento</th>
+                    <th className="border border-gray-400 px-4 py-2"
+                    >Documento</th>
+                    <th className="border border-gray-400 px-4 py-2"
+                    >Nombre</th>
+                    <th className="border border-gray-400 px-4 py-2"
+                    >Apellido</th>
+                    <th className="border border-gray-400 px-4 py-2"
+                    >Domicilio</th>
+                </tr>
                 </thead>
                 <tbody>
-                {personas.map((persona) => (
-                    <tr key={titulares.documento}>
+                {titulares.map((titular, index) => (
+                    <tr key={titular.id}>
                         <td className="border border-gray-400 px-4 py-2"
-                        >{titulares.tipoDocumento}</td>
+                        >{titular.tipoDocumento}</td>
                         <td className="border border-gray-400 px-4 py-2"
-                        >{titulares.documento}</td>
+                        >{titular.documento}</td>
                         <td className="border border-gray-400 px-4 py-2"
-                        >{titulares.nombre}</td>
+                        >{titular.nombre}</td>
                         <td className="border border-gray-400 px-4 py-2"
-                        >{titulares.apellido}</td>
+                        >{titular.apellido}</td>
+                        <td className="border border-gray-400 px-4 py-2"
+                        >{titular.domicilio}</td>
                     </tr>
                 ))}
                 </tbody>

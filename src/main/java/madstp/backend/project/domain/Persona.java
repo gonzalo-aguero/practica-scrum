@@ -41,6 +41,9 @@ public abstract class Persona {
     @Column(nullable = false)
     private String nombre;
 
+    @Column(nullable = false)
+    private String apellido;
+
     @Column(name = "documento", nullable = false, unique = true)
     private String documento;
 

@@ -139,7 +139,7 @@ public class LicenciaService {
         }
     }
 
-    private LocalDate calcularVigenciaLicencia(long titularId, TitularService titularService, ClaseLicenciaService claseLicenciaService) {
+    LocalDate calcularVigenciaLicencia(long titularId, TitularService titularService, ClaseLicenciaService claseLicenciaService) {
 
         TitularDTO titular = titularService.get(titularId);
 

@@ -5,6 +5,7 @@ import { useState } from 'react';
 
 const validationSchema = Yup.object({
     nombre: Yup.string().required('El nombre es obligatorio'),
+    apellido: Yup.string().required('El apellido es obligatorio'),
     documento: Yup.string().required('El numero de documento es obligatorio'),
     tipoDocumento: Yup.string().oneOf(['DNI', 'PASAPORTE', 'CEDULA_IDENTIDAD'], 'Tipo de documento invalido').required('Tipo de documento es obligatorio'),
     domicilio: Yup.string().required('El domicilio es obligatorio'),
@@ -52,6 +53,7 @@ const RegisterTitularForm = () => {
                 <Formik
                     initialValues={{
                         nombre: '',
+                        apellido: '',
                         documento: '',
                         tipoDocumento: '',
                         domicilio: '',
@@ -67,19 +69,25 @@ const RegisterTitularForm = () => {
                         <Form className="space-y-4">
                             <div>
                                 <label className="block text-sm">Nombre</label>
-                                <Field name="nombre" type="text" className="form-input" />
+                                <Field name="nombre" type="text" className="block w-full border-2 border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:border-indigo-600" />
                                 <ErrorMessage name="nombre" component="div" className="text-red-500 text-sm" />
                             </div>
 
                             <div>
+                                <label className="block text-sm">Apellido</label>
+                                <Field name="apellido" type="text" className="block w-full border-2 border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:border-indigo-600" />
+                                <ErrorMessage name="apellido" component="div" className="text-red-500 text-sm" />
+                            </div>
+
+                            <div>
                                 <label className="block text-sm">Documento</label>
-                                <Field name="documento" type="text" className="form-input" />
+                                <Field name="documento" type="text" className="block w-full border-2 border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:border-indigo-600" />
                                 <ErrorMessage name="documento" component="div" className="text-red-500 text-sm" />
                             </div>
 
                             <div>
                                 <label className="block text-sm">Tipo de Documento</label>
-                                <Field as="select" name="tipoDocumento" className="form-input">
+                                <Field as="select" name="tipoDocumento" className="block w-full border-2 border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:border-indigo-600">
                                     <option value="">Selecciona uno</option>
                                     <option value="DNI">DNI</option>
                                     <option value="PASAPORTE">Pasaporte</option>
@@ -90,26 +98,14 @@ const RegisterTitularForm = () => {
 
                             <div>
                                 <label className="block text-sm">Domicilio</label>
-                                <Field name="domicilio" type="text" className="form-input" />
+                                <Field name="domicilio" type="text" className="block w-full border-2 border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:border-indigo-600" />
                                 <ErrorMessage name="domicilio" component="div" className="text-red-500 text-sm" />
                             </div>
 
                             <div>
                                 <label className="block text-sm">Fecha de Nacimiento</label>
-                                <Field name="fechaNacimiento" type="date" className="form-input" />
+                                <Field name="fechaNacimiento" type="date" className="block w-full border-2 border-gray-300 rounded-lg px-3 py-2 text-lg focus:outline-none focus:border-indigo-600" />
                                 <ErrorMessage name="fechaNacimiento" component="div" className="text-red-500 text-sm" />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm">Contraseña</label>
-                                <Field name="contrasena" type="password" className="form-input" />
-                                <ErrorMessage name="contrasena" component="div" className="text-red-500 text-sm" />
-                            </div>
-
-                            <div>
-                                <label className="block text-sm">Confirmar Contraseña</label>
-                                <Field name="confirmContrasena" type="password" className="form-input" />
-                                <ErrorMessage name="confirmContrasena" component="div" className="text-red-500 text-sm" />
                             </div>
 
                             <div className="flex items-center gap-2">

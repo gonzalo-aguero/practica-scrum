@@ -62,6 +62,7 @@ public class TitularService {
     private TitularDTO mapToDTO(final Titular titular, final TitularDTO titularDTO) {
         titularDTO.setId(titular.getId());
         titularDTO.setNombre(titular.getNombre());
+        titularDTO.setApellido(titular.getApellido());
         titularDTO.setTipoDocumento(titular.getTipoDocumento());
         titularDTO.setDocumento(titular.getDocumento());
         titularDTO.setDomicilio(titular.getDomicilio());
@@ -102,6 +103,7 @@ public class TitularService {
 
     private Titular mapToEntity(final TitularDTO titularDTO, final Titular titular) {
         titular.setNombre(titularDTO.getNombre());
+        titular.setApellido(titularDTO.getApellido());
         titular.setTipoDocumento(titularDTO.getTipoDocumento());
         titular.setDocumento(titularDTO.getDocumento());
         titular.setDomicilio(titularDTO.getDomicilio());

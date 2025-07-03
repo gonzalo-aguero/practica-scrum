@@ -1,12 +1,12 @@
 -- Insertar usuarios del sistema (personal municipal)
 INSERT INTO usuario (
-    id, nombre, documento, tipo_documento, domicilio,
+    id, nombre, apellido, documento, tipo_documento, domicilio,
     fecha_nacimiento, contrasena, date_created, last_updated
 )
 VALUES
-    (1, 'Juan Rodríguez', '30456789', 0, 'Av. Rivadavia 8000',
+    (1, 'Juan', 'Rodríguez', '30456789', 0, 'Av. Rivadavia 8000',
      '1980-07-15', 'pass', now(), now()),
-    (2, 'María Fernández', '25789123', 0, 'Callao 500',
+    (2, 'María', 'Fernández', '25789123', 0, 'Callao 500',
      '1975-11-30', 'pass', now(), now())
 ON CONFLICT (id) DO NOTHING;
 
@@ -20,16 +20,16 @@ ON CONFLICT (id) DO NOTHING;
 
 -- Insertar titulares vinculados a las licencias
 INSERT INTO titular (
-  id, nombre, documento, tipo_documento, domicilio,
+  id, nombre, apellido, documento, tipo_documento, domicilio,
   fecha_nacimiento, contrasena, grupo_sanguineo, es_donante_organos,
   date_created, last_updated, licencia_id
 ) 
 VALUES
-(1, 'Juan Pérez', '12345678', 0, 'Calle Falsa 123',
+(1, 'Juan', 'Pérez', '12345678', 0, 'Calle Falsa 123',
  '1990-05-10', 'clave1', 2, true, now(), now(), 1),
-(2, 'María Gómez', '87654321', 0, 'Av. Siempre Viva 742',
+(2, 'María', 'Gómez', '87654321', 0, 'Av. Siempre Viva 742',
  '1985-11-23', 'clave2', 4, false, now(), now(), 2),
-(3, 'Carlos Ruiz', '34567890', 0, 'Boulevard Central 1000',
+(3, 'Carlos', 'Ruiz', '34567890', 0, 'Boulevard Central 1000',
  '2000-01-15', 'clave3', 1, true, now(), now(), 3)
 ON CONFLICT (id) DO NOTHING;
 

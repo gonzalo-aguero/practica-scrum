@@ -21,6 +21,10 @@ public class TitularDTO {
 
     @NotNull
     @Size(max = 255)
+    private String apellido;
+
+    @NotNull
+    @Size(max = 255)
     @TitularDocumentoUnique
     private String documento;
 
