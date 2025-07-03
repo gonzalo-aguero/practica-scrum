@@ -292,9 +292,10 @@ public class LicenciaService {
     private Licencia mapToEntity(final LicenciaDTO licenciaDTO, final Licencia licencia) {
 
         List<ClaseLicencia> clases = licenciaDTO.getClases().stream()
-                .map(dto -> claseLicenciaService.mapToEntity(dto, new ClaseLicencia()))
-                .peek(clase -> clase.setLicencia(licencia)) // muy importante para mantener la relación bidireccional
+                .map(dto -> claseLicenciaService.mapToEntity(dto, new ClaseLicencia()))// muy importante para mantener la relación bidireccional
                 .toList();
+
+        System.out.println(clases);
 
         licencia.setClasesLicencia(clases);
 

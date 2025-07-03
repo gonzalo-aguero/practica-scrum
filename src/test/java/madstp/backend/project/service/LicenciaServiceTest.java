@@ -1,5 +1,6 @@
 package madstp.backend.project.service;
 
+import madstp.backend.project.domain.ClaseLicencia;
 import madstp.backend.project.domain.Licencia;
 import madstp.backend.project.dto.ClaseLicenciaDTO;
 import madstp.backend.project.dto.LicenciaDTO;
@@ -76,7 +77,7 @@ class LicenciaServiceTest {
         List<LicenciaDTO> result = licenciaService.findAll();
         assertThat(result).isNotNull();
         assertThat(result).hasSize(1);
-        verify(licenciaRepository).findAll(any(Sort.class));
+        verify(licenciaRepository).findAll();
     }
 
     @Test
@@ -103,6 +104,16 @@ class LicenciaServiceTest {
         ClaseLicenciaDTO claseDTO = new ClaseLicenciaDTO();
         claseDTO.setClaseLicenciaEnum(ClaseLicenciaEnum.B);
         licenciaDTO.setClases(List.of(claseDTO));
+
+        when(claseLicenciaService.mapToEntity(any(ClaseLicenciaDTO.class), any(ClaseLicencia.class)))
+        .thenAnswer(invocation -> {
+            ClaseLicenciaDTO claseLicenciaDTO = invocation.getArgument(0);
+            ClaseLicencia claseLicencia = invocation.getArgument(1);
+            claseLicencia.setClaseLicenciaEnum(claseLicenciaDTO.getClaseLicenciaEnum());
+            claseLicencia.setFechaEmision(claseLicenciaDTO.getFechaEmision());
+            claseLicencia.setFechaVencimiento(claseLicenciaDTO.getFechaVencimiento());
+            return claseLicencia;
+        });
 
         when(licenciaRepository.save(any(Licencia.class))).thenAnswer(invocation -> {
             Licencia lic = invocation.getArgument(0);
