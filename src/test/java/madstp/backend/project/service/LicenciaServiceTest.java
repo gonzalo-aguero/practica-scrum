@@ -172,7 +172,7 @@ class LicenciaServiceTest {
     void cuandoCalcularVigenciaLicencia_jovenDevuelveVigenciaCorrecta() {
         titularDTO.setFechaNacimiento(LocalDate.now().minusYears(18));
         when(titularService.get(1L)).thenReturn(titularDTO);
-        when(licenciaRepository.findByTitular_Id(1L)).thenReturn(Optional.empty());
+        when(licenciaRepository.findByTitular_Id(1L)).thenReturn(Optional.of(licencia));
         LocalDate fechaVencimiento = licenciaService.calcularVigenciaLicencia(1L, titularService, claseLicenciaService);
         assertThat(fechaVencimiento).isEqualTo(LocalDate.now().plusYears(3));
     }

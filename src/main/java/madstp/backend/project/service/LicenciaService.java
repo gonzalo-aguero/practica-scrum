@@ -149,11 +149,11 @@ public class LicenciaService {
 
         TitularDTO titular = titularService.get(titularId);
 
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+//          DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate fechaNac = titular.getFechaNacimiento();
         LocalDate fechaVencimiento;
 
-        Long edad = ChronoUnit.YEARS.between(fechaNac, LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")));
+        long edad = ChronoUnit.YEARS.between(fechaNac, LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")));
 
         if(edad<21){
             if(licenciaRepository.findByTitular_Id(titularId).isPresent()){
@@ -164,15 +164,15 @@ public class LicenciaService {
             }
         }
         else {
-            if(edad >=21 && edad <= 46){
+            if(edad <= 46){
                 fechaVencimiento = LocalDate.of(LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")).getYear()+5, fechaNac.getMonth(), fechaNac.getDayOfMonth());
             }
             else {
-                if(edad > 46 && edad <= 60){
+                if(edad <= 60){
                     fechaVencimiento = LocalDate.of(LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")).getYear()+4, fechaNac.getMonth(), fechaNac.getDayOfMonth());
                 }
                 else{
-                    if(edad > 60 && edad <= 70){
+                    if(edad <= 70){
                         fechaVencimiento = LocalDate.of(LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")).getYear()+3, fechaNac.getMonth(), fechaNac.getDayOfMonth());
                     }
                     else{
