@@ -11,7 +11,7 @@ const VerLicencia = () => {
     const [datosLicencia, setDatosLicencia] = useState(null);
     const [datosClaseLicencia, setDatosClaseLicencia] = useState([]);
     const [datosTitular, setDatosTitular] = useState(null);
-    const [datosUsuario, setDatosUsuario] = useState(null);
+    const [datosUsuarios, setDatosUsuarios] = useState([]);
     const [loading, setLoading] = useState(true);
 
     const handlePrint = useReactToPrint({

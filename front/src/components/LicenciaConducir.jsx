@@ -21,8 +21,18 @@ const descripcionClases = {
     'G3': 'Equipos especiales autopropulsados.',
 };
 
-const LicenciaConducir = React.forwardRef(({ datosLicencia, datosTitular, datosEmisor, datosClaseLicencia }, ref) => {
+const LicenciaConducir = React.forwardRef(({ licencia, datos, clasesLicencia, usuariosEmisores }, ref) => {
     const clases = Array.isArray(datosClaseLicencia.clases) ? datosClaseLicencia.clases : [];
+
+    // Encuentra la clase con la fecha de emisión más reciente
+    const claseMasReciente = Array.isArray(clasesLicencia) && clasesLicencia.length > 0
+      ? clasesLicencia.reduce((max, current) => {
+          // Convierte las fechas a timestamp si llegan como string
+          const fechaMax = new Date(max.fechaEmision).getTime();
+          const fechaCurrent = new Date(current.fechaEmision).getTime();
+          return fechaCurrent > fechaMax ? current : max;
+        })
+      : null;
 
     return (
         <div ref={ref} className="flex flex-col md:flex-row border border-gray-300 shadow-lg max-w-4xl p-4 bg-white font-sans text-sm" style={{ fontFamily: 'sans-serif' }}>
@@ -32,19 +42,25 @@ const LicenciaConducir = React.forwardRef(({ datosLicencia, datosTitular, datosE
                 <img src={datos.fotoUrl} alt="Foto titular" className="w-32 h-40 mt-2 object-cover border" />
 
                 <div className="mt-4 space-y-1">
-                    <p><strong>Nombre:</strong> {datosTitular.nombre}</p>
-                    <p><strong>Apellido:</strong> {datosTitular.apellido}</p>
-                    <p><strong>F. Nacimiento:</strong> {datosTitular.fechaNacimiento}</p>
-                    <p><strong>Domicilio:</strong> {datosTitular.domicilio}</p>
+                    <p><strong>Nombre:</strong> {datos.nombre}</p>
+                    <p><strong>Apellido:</strong> {datos.apellido}</p>
+                    <p><strong>F. Nacimiento:</strong> {datos.fechaNacimiento}</p>
+                    <p><strong>Domicilio:</strong> {datos.domicilio}</p>
                     <p><strong>Localidad:</strong> Santa Fe</p>
                     <p><strong>Provincia:</strong> Santa Fe</p>
-                    <p><strong>N° de Licencia:</strong> {datosLicencia.nroLicencia}</p>
+                    <p><strong>N° de Licencia:</strong> {licencia.nroLicencia}</p>
                     <p><strong>Clases:</strong> {clases.join(', ')}</p>
                 </div>
 
-                <div className="mt-4">
-                    <p><strong>Fecha de otorgamiento:</strong> {datosLicencia.fechaEmision}</p>
-                    <p><strong>Fecha de vencimiento:</strong> {datosLicencia.fechaVencimiento}</p>
+                <div>
+                  <p>
+                    <strong>Fecha de otorgamiento:</strong>{" "}
+                    {claseMasReciente ? claseMasReciente.fechaEmision : "-"}
+                  </p>
+                  <p>
+                    <strong>Fecha de vencimiento:</strong>{" "}
+                    {claseMasReciente ? claseMasReciente.fechaVencimiento : "-"}
+                  </p>
                 </div>
             </div>
 
