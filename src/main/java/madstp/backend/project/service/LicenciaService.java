@@ -47,6 +47,11 @@ public class LicenciaService {
         return licenciaDTOs;
     }
 
+    public Optional<LicenciaDTO> findByTitularId(Long id) {
+        return licenciaRepository.findByTitular_Id(id)
+                .map(licencia -> mapToDTO(licencia, new LicenciaDTO()));
+    }
+
     public LicenciaDTO get(final Long id) {
         return licenciaRepository.findById(id)
                 .map(licencia -> mapToDTO(licencia, new LicenciaDTO()))

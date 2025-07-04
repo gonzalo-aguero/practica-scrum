@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import madstp.backend.project.dto.LicenciaDTO;
 import madstp.backend.project.service.LicenciaService;
@@ -33,6 +34,11 @@ public class LicenciaResource {
     @GetMapping("/{id}")
     public ResponseEntity<LicenciaDTO> getLicencia(@PathVariable(name = "id") final Long id) {
         return ResponseEntity.ok(licenciaService.get(id));
+    }
+
+    @GetMapping("/LicXTitular/{id}")
+    public ResponseEntity<Optional<LicenciaDTO>> getLicenciaXTitular(@PathVariable(name = "id") final Long id) {
+        return ResponseEntity.ok(licenciaService.findByTitularId(id));
     }
 
     @GetMapping("/costo")

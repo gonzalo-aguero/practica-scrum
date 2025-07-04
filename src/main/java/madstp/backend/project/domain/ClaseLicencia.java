@@ -1,6 +1,7 @@
 package madstp.backend.project.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import madstp.backend.project.enums.ClaseLicenciaEnum;
 
@@ -44,4 +45,7 @@ public class ClaseLicencia {
     @ManyToOne
     @JoinColumn(name = "documento_usuario_emisor", referencedColumnName = "documento", nullable = true)
     private Usuario usuarioEmisor;
+
+    @Column(nullable = false)
+    private Boolean activo;
 }

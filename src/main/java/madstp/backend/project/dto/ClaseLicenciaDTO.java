@@ -20,4 +20,6 @@ public class ClaseLicenciaDTO {
     private LocalDate fechaVencimiento;
 
     private Long usuarioEmisor;
+
+    private Boolean activo;
 }
