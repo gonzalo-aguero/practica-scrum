@@ -21,16 +21,16 @@ ON CONFLICT (id) DO NOTHING;
 -- Insertar titulares vinculados a las licencias
 INSERT INTO titular (
   id, nombre, apellido, documento, tipo_documento, domicilio,
-  fecha_nacimiento, contrasena, grupo_sanguineo, es_donante_organos,
+  fecha_nacimiento, grupo_sanguineo, es_donante_organos,
   date_created, last_updated, licencia_id
 ) 
 VALUES
 (1, 'Juan', 'Pérez', '12345678', 0, 'Calle Falsa 123',
- '1990-05-10', 'clave1', 2, true, now(), now(), 1),
+ '1990-05-10', 2, true, now(), now(), 1),
 (2, 'María', 'Gómez', '87654321', 0, 'Av. Siempre Viva 742',
- '1985-11-23', 'clave2', 4, false, now(), now(), 2),
+ '1985-11-23', 4, false, now(), now(), 2),
 (3, 'Carlos', 'Ruiz', '34567890', 0, 'Boulevard Central 1000',
- '2000-01-15', 'clave3', 1, true, now(), now(), 3)
+ '2000-01-15', 1, true, now(), now(), 3)
 ON CONFLICT (id) DO NOTHING;
 
 -- Insertar clases de licencia para cada titular

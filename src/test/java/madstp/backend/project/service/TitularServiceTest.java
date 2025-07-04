@@ -42,7 +42,6 @@ public class TitularServiceTest {
         titular.setTipoDocumento(TipoDocumentoEnum.DNI);
         titular.setDomicilio("123 Main Street");
         titular.setFechaNacimiento(LocalDate.of(1985, 5, 20));
-        titular.setContrasena("jd1985");
         titular.setEsDonanteOrganos(true);
 
         titularDTO = new TitularDTO();
@@ -52,7 +51,6 @@ public class TitularServiceTest {
         titularDTO.setTipoDocumento(TipoDocumentoEnum.DNI);
         titularDTO.setDomicilio("123 Main Street");
         titularDTO.setFechaNacimiento(LocalDate.of(1985, 5, 20));
-        titularDTO.setContrasena("jd1985");
         titularDTO.setEsDonanteOrganos(true);
     }
 

@@ -17,5 +17,12 @@ import org.springframework.stereotype.Component;
 
 @Entity
 @Table(name = "Administrador", schema = "public")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+
 public class Administrador extends Persona {
+    @Column(nullable = false)
+    private String contrasena;
 }

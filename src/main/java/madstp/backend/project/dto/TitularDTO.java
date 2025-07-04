@@ -39,9 +39,6 @@ public class TitularDTO {
     private LocalDate fechaNacimiento;
 
     @NotNull
-    private String contrasena;
-
-    @NotNull
     private GrupoSanguineoEnum grupoSanguineo;
 
     @NotNull

@@ -75,9 +75,8 @@ const RegisterUsuarioForm = () => {
                 <Formik
                     initialValues={{
                         email: '',
-                        contrasena: '',
-                        confirmarContrasena: '',
                         nombre: '',
+                        apellido: '',
                         tipodocumento: 'DNI',
                         documento: '',
                         domicilio: '',
@@ -105,45 +104,31 @@ const RegisterUsuarioForm = () => {
                                 </div>
 
                                 <div>
-                                    <label htmlFor="contrasena" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Contraseña
-                                    </label>
-                                    <Field
-                                        id="contrasena"
-                                        name="contrasena"
-                                        type="password"
-                                        placeholder="••••••••"
-                                        className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    />
-                                    <ErrorMessage name="contrasena" component="div" className="text-red-500 text-sm mt-1" />
-                                </div>
-
-                                <div>
-                                    <label htmlFor="confirmarContrasena" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Confirmar Contraseña
-                                    </label>
-                                    <Field
-                                        id="confirmarContrasena"
-                                        name="confirmarContrasena"
-                                        type="password"
-                                        placeholder="••••••••"
-                                        className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    />
-                                    <ErrorMessage name="confirmarContrasena" component="div" className="text-red-500 text-sm mt-1" />
-                                </div>
-
-                                <div>
                                     <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Nombre Completo
+                                        Nombre
                                     </label>
                                     <Field
                                         id="nombre"
                                         name="nombre"
                                         type="text"
-                                        placeholder="Juan Pérez"
+                                        placeholder="Juan"
                                         className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                                     />
                                     <ErrorMessage name="nombre" component="div" className="text-red-500 text-sm mt-1" />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="apellido" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Apellido
+                                    </label>
+                                    <Field
+                                        id="apellido"
+                                        name="apellido"
+                                        type="text"
+                                        placeholder="Pérez"
+                                        className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    />
+                                    <ErrorMessage name="apellido" component="div" className="text-red-500 text-sm mt-1" />
                                 </div>
 
                                 <div>

@@ -31,7 +31,6 @@ class TitularRepositoryTest {
         titular.setTipoDocumento(TipoDocumentoEnum.DNI);
         titular.setDomicilio("123 Main Street");
         titular.setFechaNacimiento(null);
-        titular.setContrasena("jd1985");
         titular.setEsDonanteOrganos(true);
 
         // Act
@@ -52,7 +51,6 @@ class TitularRepositoryTest {
         titular.setTipoDocumento(TipoDocumentoEnum.PASAPORTE);
         titular.setDomicilio("456 Another Street");
         titular.setFechaNacimiento(LocalDate.of(2002, 1, 8));
-        titular.setContrasena("jane2023");
         titular.setEsDonanteOrganos(false);
         titularRepository.save(titular);
 
