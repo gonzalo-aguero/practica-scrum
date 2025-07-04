@@ -1,6 +1,7 @@
 package madstp.backend.project.service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import madstp.backend.project.domain.Titular;
@@ -29,6 +30,18 @@ public class TitularService {
                 .map(titular -> mapToDTO(titular, new TitularDTO()))
                 .toList();
     }
+
+    public List<TitularDTO> findByNombreAndApellidoLike(String nombre, String apellido){
+        final String nombrePattern = (nombre == null || nombre.isBlank()) ? "%" : "%" + nombre + "%";
+        final String apellidoPattern = (apellido == null || apellido.isBlank()) ? "%" : "%" + apellido + "%";
+
+        return titularRepository
+                .findByNombreLikeAndApellidoLike(nombrePattern, apellidoPattern, Sort.by("nombre", "apellido"))
+                .stream()
+                .map(titular -> mapToDTO(titular, new TitularDTO()))
+                .toList();
+    }
+
 
     public TitularDTO get(final Long id) {
         return titularRepository.findById(id)
@@ -116,5 +129,4 @@ public class TitularService {
     public boolean documentoExists(final String documento) {
         return titularRepository.existsByDocumentoIgnoreCase(documento);
     }
-
 }

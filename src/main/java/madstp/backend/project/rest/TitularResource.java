@@ -27,9 +27,20 @@ public class TitularResource {
 
     @GetMapping("/all-titulares")
     @ApiResponse(responseCode = "200")
-    public ResponseEntity<List<TitularDTO>> getAllTitulares() {
+    public ResponseEntity<List<TitularDTO>> getAllTitulares(
+        @RequestParam(required = false) String nombre,
+        @RequestParam(required = false) String apellido) {
+
+
+    nombre = (nombre == null || nombre.trim().isEmpty()) ? null : nombre;
+    apellido = (apellido == null || apellido.trim().isEmpty()) ? null : apellido;
+
+    if (nombre == null && apellido == null) {
         return ResponseEntity.ok(titularService.findAll());
+    } else {
+        return ResponseEntity.ok(titularService.findByNombreAndApellidoLike(nombre, apellido));
     }
+}
 
     @GetMapping("/{id}")
     @ApiResponse(responseCode = "200")
