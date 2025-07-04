@@ -25,12 +25,12 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public abstract class Persona {
 
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
             allocationSize = 1,
-            initialValue = 1
+            initialValue = 10000
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,

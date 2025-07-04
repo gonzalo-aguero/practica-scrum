@@ -17,12 +17,12 @@ import java.util.List;
 @Table(name = "Licencia", schema = "public")
 public class Licencia {
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
             allocationSize = 1,
-            initialValue = 1
+            initialValue = 10000
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,

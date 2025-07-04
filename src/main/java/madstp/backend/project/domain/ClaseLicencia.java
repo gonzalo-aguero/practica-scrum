@@ -15,12 +15,12 @@ import java.time.LocalDate;
 @Table(name = "ClaseLicencia", schema = "public")
 public class ClaseLicencia {
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
             allocationSize = 1,
-            initialValue = 1
+            initialValue = 10000
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,

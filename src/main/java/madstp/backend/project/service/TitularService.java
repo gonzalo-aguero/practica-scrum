@@ -58,6 +58,7 @@ public class TitularService {
     public Long create(final TitularDTO titularDTO) {
         final Titular titular = new Titular();
         mapToEntity(titularDTO, titular);
+        System.out.println("Id: " + titular.getId());
         return titularRepository.save(titular).getId();
     }
 
