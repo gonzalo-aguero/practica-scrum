@@ -33,6 +33,10 @@ public class UsuarioService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public Usuario getEntity(final Long id) {
+        return usuarioRepository.findById(id).orElseThrow(NotFoundException::new);
+    }
+
     public UsuarioDTO getByDocumento(final String documento){
         return usuarioRepository.findByDocumento(documento)
                 .map(usuario -> mapToDTO(usuario, new UsuarioDTO()))

@@ -15,6 +15,7 @@ import java.util.Optional;
 public interface ClaseLicenciaRepository extends JpaRepository<ClaseLicencia, Long> {
 
     ClaseLicencia findFirstByUsuarioEmisor(Usuario usuario);
+
     Optional<ClaseLicencia> findByLicencia(Licencia licencia);
 
     Optional<ClaseLicencia> findByLicenciaAndClaseLicenciaEnumAndActivoIsTrue(Licencia licencia, ClaseLicenciaEnum claseLicenciaEnum);

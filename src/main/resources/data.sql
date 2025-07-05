@@ -40,7 +40,7 @@ UPDATE titular SET licencia_id = 3 WHERE id=3;
 -- Insertar clases de licencia para cada titular
 INSERT INTO clase_licencia (
   id, clase_licencia_enum, fecha_emision, fecha_vencimiento, licencia_id, documento_usuario_emisor, activo
-) 
+)
 VALUES
 (1, 1, '2023-01-01', '2028-01-01', 1, '30456789', true),
 (2, 2, '2022-06-15', '2027-06-15', 2, '25789123', true),

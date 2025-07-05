@@ -26,4 +26,5 @@ public interface TitularRepository extends JpaRepository<Titular, Long> {
             @Param("apellido") String apellido,
             Sort sort
     );
+    List<Titular> findByNombreIgnoreCaseStartingWithAndApellidoIgnoreCaseStartingWith(String nombre, String apellido);
 }

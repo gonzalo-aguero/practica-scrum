@@ -49,6 +49,10 @@ public class TitularService {
                 .orElseThrow(NotFoundException::new);
     }
 
+    public Titular getEntity(final Long id) {
+        return titularRepository.findById(id).orElseThrow(NotFoundException::new);
+    }
+
     public TitularDTO getByTipoDocumentoAndDocumento(final TipoDocumentoEnum tipoDocumento, final String documento) {
         return titularRepository.findByTipoDocumentoAndDocumento(tipoDocumento, documento)
                 .map(titular -> mapToDTO(titular, new TitularDTO()))

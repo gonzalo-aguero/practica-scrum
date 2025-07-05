@@ -3,11 +3,13 @@ package madstp.backend.project.service;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.validation.constraints.NotNull;
 import madstp.backend.project.domain.ClaseLicencia;
 import madstp.backend.project.domain.Licencia;
-import madstp.backend.project.domain.Usuario;
 import madstp.backend.project.dto.ClaseLicenciaDTO;
+import madstp.backend.project.enums.ClaseLicenciaEnum;
 import madstp.backend.project.repos.ClaseLicenciaRepository;
+import madstp.backend.project.repos.LicenciaRepository;
 import madstp.backend.project.repos.UsuarioRepository;
 import madstp.backend.project.util.NotFoundException;
 import org.springframework.data.domain.Sort;
@@ -19,11 +21,13 @@ public class ClaseLicenciaService {
 
     private final ClaseLicenciaRepository claseLicenciaRepository;
     private final UsuarioRepository usuarioRepository;
+    private final LicenciaRepository licenciaRepository;
 
     public ClaseLicenciaService(final ClaseLicenciaRepository claseLicenciaRepository,
-                                final UsuarioRepository usuarioRepository) {
+                                final UsuarioRepository usuarioRepository, LicenciaRepository licenciaRepository) {
         this.claseLicenciaRepository = claseLicenciaRepository;
         this.usuarioRepository = usuarioRepository;
+        this.licenciaRepository = licenciaRepository;
     }
 
     public List<ClaseLicenciaDTO> findAll() {
@@ -52,6 +56,35 @@ public class ClaseLicenciaService {
                 .map(claseLicencia -> mapToDTO(claseLicencia, new ClaseLicenciaDTO()))
                 .orElseThrow(NotFoundException::new);
     }
+
+    public ClaseLicencia getByLicenciaIdAndClaseLicenciaEnumAndActivoIsTrue(final Long licenciaId, final ClaseLicenciaEnum claseLicenciaEnum){
+        Licencia licencia = licenciaRepository.findById(licenciaId).orElseThrow(NotFoundException::new);
+        return claseLicenciaRepository.findByLicenciaAndClaseLicenciaEnumAndActivoIsTrue(licencia, claseLicenciaEnum).orElseThrow(NotFoundException::new);
+    }
+
+    public Boolean existsLicenciaIdAndClaseLicenciaEnumAndActivoIsTrue(final Long licenciaId, final ClaseLicenciaEnum claseLicenciaEnum){
+        Licencia licencia = licenciaRepository.findById(licenciaId).orElseThrow(NotFoundException::new);
+        return claseLicenciaRepository.existsClaseLicenciaByLicenciaAndClaseLicenciaEnumAndActivoIsTrue(licencia, claseLicenciaEnum);
+    }
+
+    public Boolean moreRestrictive(ClaseLicencia clase1, ClaseLicenciaEnum clase2) {
+        if (clase1 == null || clase2 == null) {
+            throw new IllegalArgumentException("Las clases de licencia no pueden ser nulas");
+        }
+        return (clase1.getClaseLicenciaEnum().ordinal() < clase2.ordinal());
+    }
+
+
+    public Optional<ClaseLicencia> obtenerLicenciaNoA(List<ClaseLicencia> licencias) {
+
+        return licencias.stream()
+                .filter(licencia ->
+                        licencia.getActivo() &&
+                                !ClaseLicenciaEnum.A.equals(licencia.getClaseLicenciaEnum()))
+                .findFirst();
+    }
+
+
 
     public Long create(final ClaseLicenciaDTO claseLicenciaDTO) {
         final ClaseLicencia claseLicencia = new ClaseLicencia();

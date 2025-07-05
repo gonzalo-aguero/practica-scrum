@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import jakarta.validation.Valid;
 import madstp.backend.project.domain.ClaseLicencia;
 import madstp.backend.project.domain.Licencia;
+import madstp.backend.project.domain.Titular;
+import madstp.backend.project.domain.Usuario;
 import madstp.backend.project.dto.LicenciaDTO;
 import madstp.backend.project.dto.ClaseLicenciaDTO;
 import madstp.backend.project.repos.LicenciaRepository;
@@ -27,22 +29,21 @@ public class LicenciaService {
     private final LicenciaRepository licenciaRepository;
     private final ClaseLicenciaService claseLicenciaService;
     private final TitularService titularService;
+    private final UsuarioService usuarioService;
 
-    public LicenciaService(final LicenciaRepository licenciaRepository, ClaseLicenciaService claseLicenciaService, TitularService titularService) {
+    public LicenciaService(final LicenciaRepository licenciaRepository, ClaseLicenciaService claseLicenciaService, TitularService titularService, UsuarioService usuarioService) {
         this.licenciaRepository = licenciaRepository;
         this.claseLicenciaService = claseLicenciaService;
         this.titularService = titularService;
+        this.usuarioService = usuarioService;
     }
 
     public List<LicenciaDTO> findAll() {
         final List<Licencia> licencias = licenciaRepository.findAll();
-        System.out.println("P1 " + licencias);
 
         List<LicenciaDTO> licenciaDTOs = licencias.stream()
                 .map(licencia -> mapToDTO(licencia, new LicenciaDTO()))
                 .toList();
-
-        System.out.println(licenciaDTOs);
 
         return licenciaDTOs;
     }
@@ -66,35 +67,52 @@ public class LicenciaService {
      */
     public Long create(final @Valid LicenciaDTO licenciaDTO) {
         // Recuperar titular por id
-        TitularDTO titular = titularService.get(licenciaDTO.getTitularId());
+        Licencia licencia;
+        Titular titular = titularService.getEntity(licenciaDTO.getTitularId());
+
         LocalDate fechaNacimiento = titular.getFechaNacimiento();
-        int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+        Integer edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
 
         // Validar datos de la licencia
-        create_validate(licenciaDTO, edad, fechaNacimiento);
+        createValidate(licenciaDTO, edad, fechaNacimiento);
 
-        // Calcular vigencia de la Licencia
+        // Calcular vigencia de la licencia
         LocalDate fechaInicioVigencia = LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires"));
         LocalDate fechaVencimiento = calcularVigenciaLicencia(titular.getId(), titularService, claseLicenciaService);
 
         // Setear fechas en cada clase a incorporar
         List<ClaseLicenciaDTO> clasesAIncorporar = licenciaDTO.getClases();
-        for (ClaseLicenciaDTO claseDTO : clasesAIncorporar) {
-            claseDTO.setFechaEmision(fechaInicioVigencia);
-            claseDTO.setFechaVencimiento(fechaVencimiento);
+
+        if (titular.getLicencia() == null) {
+            licencia = new Licencia();
+            mapToEntity(licenciaDTO, licencia);
+
+            licencia.setNroLicencia(titular.getDocumento());
+        } else {
+            List<ClaseLicencia> claseLicencias = titular.getLicencia().getClasesLicencia();
+
+            licencia = titular.getLicencia();
         }
 
-        // Calcular costo de la Licencia
-        //Integer costo = obtenerCostoLicencia(licenciaDTO);
+        for (ClaseLicenciaDTO claseDTO : clasesAIncorporar) {
+            if (titular.getLicencia() != null && claseLicenciaService.existsLicenciaIdAndClaseLicenciaEnumAndActivoIsTrue(titular.getLicencia().getId(), claseDTO.getClaseLicenciaEnum())) {
+                System.out.println("Ya tiene una licencia para clase " + claseDTO.getClaseLicenciaEnum());
+            }
 
-        final Licencia licencia = new Licencia();
-        mapToEntity(licenciaDTO, licencia);
+            if (titular.getLicencia() != null) {
+                if (claseLicenciaService.obtenerLicenciaNoA(titular.getLicencia().getClasesLicencia()).isPresent()) {
+                    claseLicenciaService.obtenerLicenciaNoA(titular.getLicencia().getClasesLicencia()).get().setActivo(false);
+                }
+            }
+            claseDTO.setFechaEmision(fechaInicioVigencia);
+            claseDTO.setFechaVencimiento(fechaVencimiento);
+            // claseLicenciaService.create(claseDTO);
+            licencia.getClasesLicencia().add(claseLicenciaService.mapToEntity(claseDTO, new ClaseLicencia()));
+        }
 
-        licencia.setNroLicencia(titular.getDocumento());
+        Licencia licenciaGuardada = licenciaRepository.save(licencia);
 
-        // Hay que de alguna forma guardar o devolver el costo de la licencia para mostrarle al usuario...
-        // idem con la vigencia
-        return licenciaRepository.save(licencia).getId();
+        return licenciaGuardada.getId();
     }
 
     /**
@@ -107,7 +125,7 @@ public class LicenciaService {
      * @param edad
      * @param fechaNacimiento
      */
-    private void create_validate(LicenciaDTO licenciaDTO, Integer edad, LocalDate fechaNacimiento){
+    private void createValidate(LicenciaDTO licenciaDTO, Integer edad, LocalDate fechaNacimiento){
         Boolean solicitaProfesional = false;
         for (ClaseLicenciaDTO clase : licenciaDTO.getClases()) {
             ClaseLicenciaEnum claseEnum = clase.getClaseLicenciaEnum();
@@ -273,6 +291,29 @@ public class LicenciaService {
         int vigenciaAnios = Period.between(LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")), fechaVencimiento).getYears();
 
         return calcularCostoLicencia(vigenciaAnios, listaClaseLicenciaEnum);
+    }
+
+    public Long renovarLicencia(final @Valid LicenciaDTO licenciaDTO) {
+        Licencia licencia = licenciaRepository.findById(licenciaDTO.getId()).orElseThrow(NotFoundException::new);
+
+        // Validar datos de la licencia
+
+        // Calcular vigencia
+        LocalDate fechaInicioVigencia = LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires"));
+        LocalDate fechaVencimiento = calcularVigenciaLicencia(licencia.getTitular().getId(), titularService, claseLicenciaService);
+
+        List<ClaseLicenciaDTO> clases = licenciaDTO.getClases();
+        for (ClaseLicenciaDTO claseDTO : clases) {
+            ClaseLicencia clase = claseLicenciaService.getByLicenciaIdAndClaseLicenciaEnumAndActivoIsTrue(licencia.getId(), claseDTO.getClaseLicenciaEnum());
+            Usuario usuarioEmisor = usuarioService.getEntity(claseDTO.getUsuarioEmisor());
+            clase.setUsuarioEmisor(usuarioEmisor);
+            clase.setFechaEmision(fechaInicioVigencia);
+            clase.setFechaVencimiento(fechaVencimiento);
+        }
+
+        licencia.setObservaciones(licenciaDTO.getObservaciones());
+
+        return licenciaRepository.save(licencia).getId();
     }
 
     public void update(final Long id, final  @Valid  LicenciaDTO licenciaDTO) {
