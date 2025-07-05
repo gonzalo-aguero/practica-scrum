@@ -11,7 +11,7 @@ VALUES
 ON CONFLICT (id) DO NOTHING;
 
 -- Insertar licencias
-INSERT INTO licencia (id, nro_licencia, observaciones) 
+INSERT INTO licencia (id, nro_licencia, observaciones)
 VALUES
 (1, 'ABC12345', 'Primera licencia de Juan Pérez'),
 (2, 'XYZ67890', 'Licencia profesional de María Gómez'),
@@ -35,10 +35,10 @@ ON CONFLICT (id) DO NOTHING;
 
 -- Insertar clases de licencia para cada titular
 INSERT INTO clase_licencia (
-  id, clase_licencia_enum, fecha_emision, fecha_vencimiento, licencia_id, documento_usuario_emisor
+  id, clase_licencia_enum, fecha_emision, fecha_vencimiento, licencia_id, documento_usuario_emisor, activo
 ) 
 VALUES
-(1, 1, '2023-01-01', '2028-01-01', 1, '30456789'),
-(2, 2, '2022-06-15', '2027-06-15', 2, '25789123'),
-(3, 0, '2024-03-20', '2029-03-20', 3, '25789123')
+(1, 1, '2023-01-01', '2028-01-01', 1, '30456789', true),
+(2, 2, '2022-06-15', '2027-06-15', 2, '25789123', true),
+(3, 0, '2024-03-20', '2029-03-20', 3, '25789123', true)
 ON CONFLICT (id) DO NOTHING;

@@ -23,25 +23,29 @@ const VerLicencia = () => {
         const fetchDatos = async () => {
             try {
                 // 1. Obtener la licencia por titular:
-                const response = await axios.get(`/api/licencias/LicXTitular/${id}`);
+                const response = await axios.get(`http://localhost:8080/api/licencias/LicXTitular/${id}`);
                 const licencia = response.data;
                 setDatosLicencia(licencia);
+                console.log(licencia);
 
                 // 2. Obtener datos del titular:
                 if (licencia && licencia.titularId) {
-                    const responseTitular = await axios.get(`/api/titulares/${licencia.titularId}`);
+                    const responseTitular = await axios.get(`http://localhost:8080/api/titulares/${licencia.titularId}`);
                     setDatosTitular(responseTitular.data);
+                    console.log(responseTitular.data);
                 }
 
                 // 3. Obtener las clases de licencia (probablemente como array):
                 if (licencia && licencia.id) {
-                    const responseClaseLicencia = await axios.get(`/api/claseLicencia/licencia/${licencia.id}`);
+                    const responseClaseLicencia = await axios.get(`http://localhost:8080/api/claseLicencias/porLicencia/${licencia.id}`);
                     setDatosClaseLicencia(responseClaseLicencia.data);
+                    console.log(responseClaseLicencia.data);
 
                     // 4. Obtener todos los usuarios emisores para esas clases:
-                    const usuariosPromise = responseClaseLicencia.data.map(async (clase) => {
+                    const clasesLicencias = responseClaseLicencia.data;
+                    const usuariosPromise = clasesLicencias.map(async (clase) => {
                         if (clase.usuarioEmisor) {
-                            const resUsuario = await axios.get(`/api/usuarios/${clase.usuarioEmisor}`);
+                            const resUsuario = await axios.get(`http://localhost:8080/api/usuarios/${clase.usuarioEmisor}`);
                             return resUsuario.data;
                         }
                         return null;

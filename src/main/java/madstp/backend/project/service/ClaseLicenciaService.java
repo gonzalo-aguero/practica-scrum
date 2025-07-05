@@ -33,6 +33,13 @@ public class ClaseLicenciaService {
                 .toList();
     }
 
+    public List<ClaseLicenciaDTO> findByLicenciaId(long id){
+        final List<ClaseLicencia> claseLicencias = claseLicenciaRepository.findByLicenciaId(id);
+        return claseLicencias.stream()
+                .map(claseLicencia -> mapToDTO(claseLicencia, new ClaseLicenciaDTO()))
+                .toList();
+    }
+
     public Optional<ClaseLicenciaDTO> findAllByLicencia(final Licencia licencia) {
         final Optional<ClaseLicencia> claseLicencia = claseLicenciaRepository.findByLicencia(licencia);
 

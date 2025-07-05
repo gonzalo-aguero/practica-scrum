@@ -33,10 +33,10 @@ public class ClaseLicenciaResource {
         return ResponseEntity.ok(claseLicenciaService.findAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ClaseLicenciaDTO> getClaseLicencia(
-            @PathVariable(name = "id") final Long id) {
-        return ResponseEntity.ok(claseLicenciaService.get(id));
+    @GetMapping("/porLicencia/{id}")
+    public ResponseEntity<List<ClaseLicenciaDTO>> getClaseLicencia(@PathVariable(name = "id") final Long id) {
+        List<ClaseLicenciaDTO> clases = claseLicenciaService.findByLicenciaId(id);
+        return ResponseEntity.ok(clases);
     }
 
     @PostMapping

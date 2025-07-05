@@ -39,7 +39,7 @@ public class UsuarioResource {
         return ResponseEntity.ok(usuarioService.get(id));
     }
 
-    @GetMapping("/{documento}")
+    @GetMapping("/documento/{documento}")
     public ResponseEntity<UsuarioDTO> getByDocumentoUsuario(@PathVariable(name = "documento") final String documento) {
         return ResponseEntity.ok(usuarioService.getByDocumento(documento));
     }
