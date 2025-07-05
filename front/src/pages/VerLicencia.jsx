@@ -14,10 +14,19 @@ const VerLicencia = () => {
     const [datosUsuarios, setDatosUsuarios] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const handlePrint = useReactToPrint({
+    const handlePrint = () => {
+        if (!licenciaRef.current) {
+            console.error("No hay nada que imprimir todavía.");
+            return;
+        }
+        imprimir();
+    };
+
+    const imprimir = useReactToPrint({
         content: () => licenciaRef.current,
         documentTitle: 'Licencia-Conducir',
     });
+
 
     useEffect(() => {
         const fetchDatos = async () => {
@@ -29,13 +38,13 @@ const VerLicencia = () => {
                 console.log(licencia);
 
                 // 2. Obtener datos del titular:
-                if (licencia && licencia.titularId) {
-                    const responseTitular = await axios.get(`http://localhost:8080/api/titulares/${licencia.titularId}`);
-                    setDatosTitular(responseTitular.data);
-                    console.log(responseTitular.data);
-                }
 
-                // 3. Obtener las clases de licencia (probablemente como array):
+                const responseTitular = await axios.get(`http://localhost:8080/api/titulares/${id}`);
+                setDatosTitular(responseTitular.data);
+                console.log(responseTitular.data);
+
+
+                // 3. Obtener las clases de licencia:
                 if (licencia && licencia.id) {
                     const responseClaseLicencia = await axios.get(`http://localhost:8080/api/claseLicencias/porLicencia/${licencia.id}`);
                     setDatosClaseLicencia(responseClaseLicencia.data);
@@ -63,14 +72,18 @@ const VerLicencia = () => {
         fetchDatos();
     }, [id]);
 
-    if (loading) return <p className="p-8">Cargando licencia...</p>;
+    if (loading || !datosLicencia || !datosTitular || datosClaseLicencia.length === 0) return <p className="p-8">Cargando licencia...</p>;
     if (!datosTitular) return <p className="p-8 text-red-600">No se pudo cargar la licencia.</p>;
+
+    console.log(datosClaseLicencia);
 
     return (
         <div className="p-8 bg-gray-100 min-h-screen">
             <h1 className="text-2xl font-bold mb-6">Licencia Generada</h1>
             <div className="mb-4">
-                <button onClick={handlePrint} className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                <button onClick={handlePrint}
+                        disabled={loading || !licenciaRef.current}
+                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
                     Imprimir / Descargar
                 </button>
             </div>

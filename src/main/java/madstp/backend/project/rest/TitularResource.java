@@ -44,7 +44,7 @@ public class TitularResource {
 
     @GetMapping("/{id}")
     @ApiResponse(responseCode = "200")
-    public ResponseEntity<TitularDTO> getTitular(@PathVariable(name = "id") @NotBlank(message = "El id es obligatorio") final Long id) {
+    public ResponseEntity<TitularDTO> getTitular(@PathVariable(name = "id")  final Long id) {
         return ResponseEntity.ok(titularService.get(id));
     }
 
