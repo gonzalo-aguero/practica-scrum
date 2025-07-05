@@ -16,6 +16,9 @@ const validationSchema = Yup.object({
     nombre: Yup.string()
         .max(255, 'El nombre no puede tener más de 255 caracteres')
         .required('El nombre es requerido'),
+    apellido: Yup.string()
+        .max(255, 'El apellido no puede tener más de 255 caracteres')
+        .required('El apellido es requerido'),
     tipodocumento: Yup.string()
         .oneOf(['DNI', 'CEDULA_IDENTIDAD', 'PASAPORTE', 'LIBRETA_CIVICA', 'LIBRETA_ENROLAMIENTO'], 'Tipo de documento inválido')
         .required('El tipo de documento es requerido'),
@@ -28,9 +31,6 @@ const validationSchema = Yup.object({
     fechaNacimiento: Yup.date()
         .required('La fecha de nacimiento es requerida')
         .max(new Date(), 'La fecha de nacimiento no puede ser futura'),
-    userType: Yup.string()
-        .oneOf(['normal', 'admin'], 'Tipo de usuario inválido')
-        .required('El tipo de usuario es requerido'),
 });
 
 const RegisterUsuarioForm = () => {
@@ -78,10 +78,11 @@ const RegisterUsuarioForm = () => {
                         nombre: '',
                         apellido: '',
                         tipodocumento: 'DNI',
+                        contrasena: '',
+                        confirmarContrasena: '',
                         documento: '',
                         domicilio: '',
                         fechaNacimiento: '',
-                        userType: 'normal',
                     }}
                     validationSchema={validationSchema}
                     onSubmit={handleSubmit}
@@ -103,6 +104,35 @@ const RegisterUsuarioForm = () => {
                                     <ErrorMessage name="email" component="div" className="text-red-500 text-sm mt-1" />
                                 </div>
 
+                                <div>
+                                    <label htmlFor="contrasena" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Contraseña
+                                    </label>
+                                    <Field
+                                        id="contrasena"
+                                        name="contrasena"
+                                        type="password"
+                                        placeholder="********"
+                                        autoComplete="new-password"
+                                        className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    />
+                                    <ErrorMessage name="contrasena" component="div" className="text-red-500 text-sm mt-1" />
+                                </div>
+
+                                <div>
+                                    <label htmlFor="confirmarContrasena" className="block text-sm font-medium text-gray-700 mb-1">
+                                        Confirmar Contraseña
+                                    </label>
+                                    <Field
+                                        id="confirmarContrasena"
+                                        name="confirmarContrasena"
+                                        type="password"
+                                        placeholder="********"
+                                        autoComplete="new-password"
+                                        className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-400 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    />
+                                    <ErrorMessage name="confirmarContrasena" component="div" className="text-red-500 text-sm mt-1" />
+                                </div>
                                 <div>
                                     <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">
                                         Nombre
@@ -190,43 +220,15 @@ const RegisterUsuarioForm = () => {
                                     />
                                     <ErrorMessage name="fechaNacimiento" component="div" className="text-red-500 text-sm mt-1" />
                                 </div>
-
-                                <div>
-                                    <label htmlFor="userType" className="block text-sm font-medium text-gray-700 mb-1">
-                                        Tipo de Usuario
-                                    </label>
-                                    <Field
-                                        as="select"
-                                        id="userType"
-                                        name="userType"
-                                        className="appearance-none relative block w-full px-3 py-2 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                                    >
-                                        <option value="normal">Usuario</option>
-                                        <option value="admin">Administrador</option>
-                                    </Field>
-                                    <ErrorMessage name="userType" component="div" className="text-red-500 text-sm mt-1" />
-                                </div>
                             </div>
 
-                            <div>
-                                <button
-                                    type="submit"
-                                    disabled={isSubmitting}
-                                    className="group relative w-full flex justify-center py-2.5 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    {isSubmitting ? (
-                                        <span className="flex items-center">
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Registrando...
-                    </span>
-                                    ) : (
-                                        'Registrar Usuario'
-                                    )}
-                                </button>
-                            </div>
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            >
+                                {isSubmitting ? 'Registrando...' : 'Registrar Usuario'}
+                            </button>
                         </Form>
                     )}
                 </Formik>

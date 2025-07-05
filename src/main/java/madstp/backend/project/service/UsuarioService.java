@@ -15,6 +15,7 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
 
+
     public UsuarioService(final UsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
     }

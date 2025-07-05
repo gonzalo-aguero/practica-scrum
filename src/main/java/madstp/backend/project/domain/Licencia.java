@@ -2,10 +2,7 @@ package madstp.backend.project.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
-import madstp.backend.project.enums.ClaseLicenciaEnum;
-import madstp.backend.project.enums.GrupoSanguineoEnum;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -30,8 +27,10 @@ public class Licencia {
     )
     private Long id;
 
-    @OneToOne(mappedBy = "licencia", fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "titular_id", referencedColumnName = "id")
     private Titular titular;
+
 
     @Column(nullable = false)
     String nroLicencia;

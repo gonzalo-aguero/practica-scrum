@@ -23,6 +23,6 @@ public class Titular extends Persona {
     private GrupoSanguineoEnum grupoSanguineo;
     
     @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "licencia_id", nullable = true)
+    @JoinColumn(name = "licencia_id", nullable = true, referencedColumnName = "id")
     private Licencia licencia;
 }
